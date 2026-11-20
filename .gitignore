@@ -1,0 +1,5 @@
+# Keep documentation files local only (not published to GitHub)
+*.pdf
+*.md
+*.txt
+!/README.md

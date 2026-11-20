@@ -19,7 +19,7 @@ Creators sign in with GitHub, set a funding goal, showcase project files, and re
 [Architecture](#-architecture) •
 [Getting Started](#-getting-started) •
 [Security](#-security-highlights) •
-[Documentation](#-documentation)
+[Diagrams](#-diagrams)
 
 </div>
 
@@ -99,7 +99,7 @@ flowchart LR
 4. `POST /api/razorpay/verify` checks the **HMAC-SHA256 signature**, then fetches the payment from Razorpay to confirm amount, currency, order ID, and status.
 5. The record moves from `done:false` to `done:true` in one atomic update. Only verified payments count toward analytics.
 
-More diagrams (sequence flows, state machine, data model) are in [`my-app/docs`](./my-app/docs).
+More diagrams (sequence flows, state machine, data model) are in [`my-app/docs/images`](./my-app/docs/images).
 
 ## 📂 Project Structure
 
@@ -122,8 +122,8 @@ GetFunds/
 │   ├── models/                  # Mongoose schemas: User, Payment, Project
 │   ├── db/                      # MongoDB connection
 │   ├── tests/                   # Unit tests
-│   └── docs/                    # Architecture docs + diagrams
-└── GETFUNDS_COMPLETE_PROJECT_GUIDE.md
+│   └── docs/images/             # Architecture diagrams (PNG + SVG)
+└── README.md
 ```
 
 ## 🚀 Getting Started
@@ -210,14 +210,15 @@ Run these from the `my-app` directory.
 - **Upload limits:** up to 5 files per folder, 5 MB per file, and 15 MB per folder.
 - **CSV injection protection:** exported cells are sanitized against spreadsheet formulas.
 
-## 📚 Documentation
+## 📚 Diagrams
 
-| Document | Description |
+| Diagram | Description |
 |---|---|
-| [Application setup](./my-app/README.md) | Detailed setup and feature notes |
-| [Current architecture](./my-app/docs/05-current-demo-architecture.md) | System design and payment lifecycle |
-| [Diagrams](./my-app/docs) | System, sequence, and data architecture diagrams |
-| [Complete project guide](./GETFUNDS_COMPLETE_PROJECT_GUIDE.md) | In-depth walkthrough of the codebase |
+| [System context](./my-app/docs/images/svg/01-system-context.svg) | High-level view of users, services, and data stores |
+| [Payment sequence](./my-app/docs/images/svg/06-payment-initiation-completion-sequence.svg) | Order creation through signature verification |
+| [Payment state machine](./my-app/docs/images/svg/07-payment-state-machine.svg) | Pending, completed, and failed transitions |
+| [Data architecture](./my-app/docs/images/svg/10-data-architecture.svg) | MongoDB collections and GridFS layout |
+| [All diagrams](./my-app/docs/images) | The full set in PNG and SVG |
 
 ## 🗺 Roadmap
 
