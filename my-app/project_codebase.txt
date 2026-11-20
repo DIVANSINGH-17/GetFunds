@@ -1,0 +1,4569 @@
+=== FILE: ./jsconfig.json ===
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./*"]
+    }
+  }
+}
+
+=== FILE: ./app/layout.js ===
+import "./globals.css";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
+import SessionWrapper from "@/components/SessionWrapper";
+
+export const metadata = {
+  title: {
+    default: "GetFunds Demo",
+    template: "%s | GetFunds Demo",
+  },
+  description: "A portfolio crowdfunding demo with GitHub OAuth, Razorpay Test Checkout, creator search, GridFS projects, and MongoDB analytics.",
+};
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body
+        className="bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px] text-white antialiased"
+      >
+        <SessionWrapper>
+          <Navbar />
+          <div className="min-h-[84vh]">{children}</div>
+          <Footer />
+        </SessionWrapper>
+      </body>
+    </html>
+  );
+}
+
+=== FILE: ./app/page.js ===
+import Link from "next/link";
+import Image from "next/image";
+
+const features = [
+  {
+    image: "/man.gif",
+    title: "GitHub creator identity",
+    description: "NextAuth OAuth provisions a local creator profile without storing passwords.",
+  },
+  {
+    image: "/coin.gif",
+    title: "Razorpay Test Checkout",
+    description: "Create test orders, display the official mock checkout, and verify HMAC signatures without moving real money.",
+  },
+  {
+    image: "/group.gif",
+    title: "Discovery and portfolios",
+    description: "Search creators, visit payable public profiles, and inspect project folders stored with MongoDB GridFS.",
+  },
+];
+
+export default function Home() {
+  return (
+    <main>
+      <section className="mx-auto flex min-h-[58vh] max-w-5xl flex-col items-center justify-center px-6 py-20 text-center">
+        <span className="rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-amber-200">
+          Portfolio project · no real payments
+        </span>
+        <div className="mt-6 flex items-center justify-center gap-2">
+          <h1 className="text-5xl font-bold md:text-7xl">GetFunds</h1>
+          <Image
+            width={76}
+            height={76}
+            src="/tea.gif"
+            alt=""
+            unoptimized
+          />
+        </div>
+        <p className="mt-6 max-w-2xl text-lg text-slate-300">
+          A full-stack crowdfunding demonstration with GitHub OAuth, Razorpay Test Checkout, creator discovery, GridFS portfolios, and aggregate analytics.
+        </p>
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <Link
+            href="/login"
+            className="rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-3 font-semibold hover:from-purple-500 hover:to-blue-500"
+          >
+            Create a demo page
+          </Link>
+          <Link
+            href="/about"
+            className="rounded-lg border border-slate-600 px-6 py-3 font-semibold hover:bg-slate-800"
+          >
+            Explore the architecture
+          </Link>
+        </div>
+      </section>
+
+      <section className="border-y border-slate-800 bg-slate-950/70 px-6 py-16">
+        <div className="mx-auto max-w-6xl">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold">Features designed for technical discussion</h2>
+            <p className="mt-2 text-slate-400">
+              Every feature maps to a concrete backend or frontend engineering decision.
+            </p>
+          </div>
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
+            {features.map((feature) => (
+              <article
+                key={feature.title}
+                className="rounded-2xl border border-slate-800 bg-slate-900 p-6"
+              >
+                <Image
+                  className="size-16 rounded-full bg-slate-700 p-2"
+                  src={feature.image}
+                  alt=""
+                  width={64}
+                  height={64}
+                  unoptimized
+                />
+                <h3 className="mt-5 text-xl font-bold">{feature.title}</h3>
+                <p className="mt-2 text-slate-400">{feature.description}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-5xl px-6 py-16">
+        <h2 className="text-center text-3xl font-bold">End-to-end flow</h2>
+        <div className="mt-8 grid gap-3 text-center text-sm md:grid-cols-6">
+          {[
+            "GitHub OAuth",
+            "Protected dashboard",
+            "Dynamic creator page",
+            "Razorpay test order",
+            "Signature verification",
+            "Live analytics refresh",
+          ].map((step, index) => (
+            <div
+              key={step}
+              className="rounded-xl border border-blue-500/20 bg-blue-500/10 p-4"
+            >
+              <span className="text-xs font-bold text-blue-300">STEP {index + 1}</span>
+              <p className="mt-2 font-semibold">{step}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </main>
+  );
+}
+
+=== FILE: ./app/about/page.js ===
+const architecture = [
+  {
+    title: "Authentication",
+    detail: "GitHub OAuth through NextAuth provisions a local MongoDB creator and enriches the session with an immutable ID and public username.",
+  },
+  {
+    title: "Authorization",
+    detail: "Dashboard rendering and profile mutations verify the server session instead of trusting a browser-provided email or username.",
+  },
+  {
+    title: "Verified test-payment lifecycle",
+    detail: "The server creates a Razorpay test order, Checkout returns payment identifiers, and a server-only HMAC check verifies the signature before analytics include it.",
+  },
+  {
+    title: "Analytics",
+    detail: "MongoDB aggregation calculates total funding, contribution count, unique supporter names, and average contribution independently of the top-ten query.",
+  },
+  {
+    title: "Creator discovery",
+    detail: "A debounced global search ranks username and display-name prefixes before similar substring matches, then links to server-rendered public profiles.",
+  },
+  {
+    title: "Project storage",
+    detail: "Authenticated creators publish project folders whose metadata uses Mongoose and whose validated file bytes use MongoDB GridFS with public safe-download routes.",
+  },
+];
+
+export default function About() {
+  return (
+    <main className="mx-auto max-w-6xl px-6 py-14">
+      <header className="max-w-3xl">
+        <span className="rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-amber-200">
+          Technical portfolio project
+        </span>
+        <h1 className="mt-5 text-4xl font-bold">How GetFunds Demo works</h1>
+        <p className="mt-4 text-lg leading-8 text-slate-300">
+          GetFunds demonstrates the architecture of a creator crowdfunding product without moving real money. It combines identity, protected mutations, Razorpay Test Checkout, public portfolios, discovery, and aggregate analytics.
+        </p>
+      </header>
+
+      <section className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        {architecture.map((item) => (
+          <article
+            key={item.title}
+            className="rounded-2xl border border-slate-800 bg-slate-900 p-6"
+          >
+            <h2 className="text-xl font-bold">{item.title}</h2>
+            <p className="mt-3 leading-7 text-slate-400">{item.detail}</p>
+          </article>
+        ))}
+      </section>
+
+      <section className="mt-12 rounded-2xl border border-blue-500/30 bg-blue-500/10 p-7">
+        <h2 className="text-2xl font-bold">Why Razorpay Test Mode?</h2>
+        <p className="mt-3 max-w-4xl leading-7 text-blue-100/80">
+          Test Mode displays Razorpay&apos;s real Checkout experience and mock bank success/failure screens, but test keys cannot move money. The project still follows the important production pattern: create the order on the server, keep the secret server-only, verify the returned signature, confirm the remote amount and status, and make completion idempotent.
+        </p>
+      </section>
+    </main>
+  );
+}
+
+export const metadata = {
+  title: "Architecture",
+  description: "Understand the authentication, authorization, data, and analytics architecture behind GetFunds Demo.",
+};
+
+=== FILE: ./app/dashboard/page.js ===
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import Dashboard from "@/components/Dashboard";
+import { authOptions } from "@/lib/auth";
+
+const DashboardPage = async () => {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect("/login");
+  }
+
+  return <Dashboard />;
+};
+
+export default DashboardPage;
+
+export const metadata = {
+  title: "Creator Analytics",
+  description: "Manage your funding target, project folders, and verified Razorpay test contribution analytics.",
+};
+
+=== FILE: ./app/api/auth/[...nextauth]/route.js ===
+import NextAuth from "next-auth";
+import { authOptions } from "@/lib/auth";
+
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST };
+
+=== FILE: ./app/api/projects/route.js ===
+import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
+import Project from "@/models/Project";
+import { getProjectFileBucket } from "@/lib/gridfs";
+import {
+  sanitizeFilename,
+  validateProjectFiles,
+} from "@/lib/project-files";
+import { requireCurrentUser } from "@/lib/current-user";
+
+export const runtime = "nodejs";
+
+const uploadFile = async ({ bucket, file, creatorId, projectId }) => {
+  const filename = sanitizeFilename(file.name);
+  const contentType = file.type || "application/octet-stream";
+  const bytes = Buffer.from(await file.arrayBuffer());
+
+  return new Promise((resolve, reject) => {
+    const upload = bucket.openUploadStream(filename, {
+      contentType,
+      metadata: {
+        creatorId: String(creatorId),
+        projectId: String(projectId),
+      },
+    });
+
+    upload.once("error", reject);
+    upload.once("finish", () => {
+      resolve({
+        fileId: upload.id,
+        filename,
+        contentType,
+        size: file.size,
+      });
+    });
+    upload.end(bytes);
+  });
+};
+
+export async function POST(request) {
+  const uploadedIds = [];
+  let project;
+
+  try {
+    const user = await requireCurrentUser();
+    const formData = await request.formData();
+    const title = String(formData.get("title") || "").trim();
+    const description = String(formData.get("description") || "").trim();
+    const files = formData
+      .getAll("files")
+      .filter((file) => typeof file?.arrayBuffer === "function");
+
+    if (title.length < 3 || title.length > 80) {
+      return NextResponse.json(
+        { ok: false, error: "Project title must contain between 3 and 80 characters." },
+        { status: 400 },
+      );
+    }
+
+    if (description.length > 500) {
+      return NextResponse.json(
+        { ok: false, error: "Project description must contain at most 500 characters." },
+        { status: 400 },
+      );
+    }
+
+    const fileError = validateProjectFiles(files);
+
+    if (fileError) {
+      return NextResponse.json(
+        { ok: false, error: fileError },
+        { status: 400 },
+      );
+    }
+
+    const bucket = await getProjectFileBucket();
+    project = new Project({
+      creatorId: user._id,
+      title,
+      description,
+      files: [],
+    });
+
+    const uploadedFiles = [];
+
+    for (const file of files) {
+      const uploadedFile = await uploadFile({
+        bucket,
+        file,
+        creatorId: user._id,
+        projectId: project._id,
+      });
+
+      uploadedIds.push(uploadedFile.fileId);
+      uploadedFiles.push(uploadedFile);
+    }
+
+    project.files = uploadedFiles;
+    await project.save();
+    revalidatePath(`/${user.username}`);
+    revalidatePath("/dashboard");
+
+    return NextResponse.json({
+      ok: true,
+      message: "Project folder uploaded successfully.",
+      projectId: String(project._id),
+    });
+  } catch (error) {
+    try {
+      const bucket = await getProjectFileBucket();
+      await Promise.allSettled(uploadedIds.map((fileId) => bucket.delete(fileId)));
+    } catch {
+      // The original upload error is more useful than cleanup failures.
+    }
+
+    return NextResponse.json(
+      { ok: false, error: error.message || "Could not upload the project folder." },
+      { status: error.message?.includes("signed in") ? 401 : 500 },
+    );
+  }
+}
+
+=== FILE: ./app/api/projects/[projectId]/route.js ===
+import mongoose from "mongoose";
+import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
+import Project from "@/models/Project";
+import { getProjectFileBucket } from "@/lib/gridfs";
+import { requireCurrentUser } from "@/lib/current-user";
+
+export const runtime = "nodejs";
+
+export async function DELETE(_request, { params }) {
+  try {
+    const { projectId } = await params;
+
+    if (!mongoose.isValidObjectId(projectId)) {
+      return NextResponse.json(
+        { ok: false, error: "Invalid project folder identifier." },
+        { status: 400 },
+      );
+    }
+
+    const user = await requireCurrentUser();
+    const project = await Project.findOne({
+      _id: projectId,
+      creatorId: user._id,
+    });
+
+    if (!project) {
+      return NextResponse.json(
+        { ok: false, error: "Project folder not found." },
+        { status: 404 },
+      );
+    }
+
+    const bucket = await getProjectFileBucket();
+    await Promise.allSettled(
+      project.files.map((file) => bucket.delete(file.fileId)),
+    );
+    await Project.deleteOne({ _id: project._id });
+    revalidatePath(`/${user.username}`);
+    revalidatePath("/dashboard");
+
+    return NextResponse.json({
+      ok: true,
+      message: "Project folder deleted.",
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { ok: false, error: error.message || "Could not delete the project folder." },
+      { status: error.message?.includes("signed in") ? 401 : 500 },
+    );
+  }
+}
+
+=== FILE: ./app/api/projects/files/[fileId]/route.js ===
+import { Readable } from "node:stream";
+import mongoose from "mongoose";
+import Project from "@/models/Project";
+import connectDb from "@/db/connectDB";
+import { getProjectFileBucket } from "@/lib/gridfs";
+
+export const runtime = "nodejs";
+
+const INLINE_TYPES = new Set([
+  "application/pdf",
+  "image/gif",
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "text/markdown",
+  "text/plain",
+]);
+
+const contentDisposition = (filename, inline) => {
+  const safeAscii = filename.replace(/[^a-zA-Z0-9._ -]/g, "_");
+  const encoded = encodeURIComponent(filename);
+
+  return `${inline ? "inline" : "attachment"}; filename="${safeAscii}"; filename*=UTF-8''${encoded}`;
+};
+
+export async function GET(_request, { params }) {
+  const { fileId } = await params;
+
+  if (!mongoose.isValidObjectId(fileId)) {
+    return new Response("Invalid file identifier.", { status: 400 });
+  }
+
+  await connectDb();
+
+  const objectId = new mongoose.Types.ObjectId(fileId);
+  const project = await Project.findOne({ "files.fileId": objectId })
+    .select("files")
+    .lean();
+
+  if (!project) {
+    return new Response("Project file not found.", { status: 404 });
+  }
+
+  const file = project.files.find(
+    (candidate) => String(candidate.fileId) === fileId,
+  );
+
+  if (!file) {
+    return new Response("Project file not found.", { status: 404 });
+  }
+
+  const bucket = await getProjectFileBucket();
+  const nodeStream = bucket.openDownloadStream(objectId);
+  const webStream = Readable.toWeb(nodeStream);
+
+  return new Response(webStream, {
+    headers: {
+      "Cache-Control": "public, max-age=3600",
+      "Content-Disposition": contentDisposition(
+        file.filename,
+        INLINE_TYPES.has(file.contentType),
+      ),
+      "Content-Length": String(file.size),
+      "Content-Type": file.contentType,
+      "X-Content-Type-Options": "nosniff",
+    },
+  });
+}
+
+=== FILE: ./app/api/razorpay/order/route.js ===
+import { randomUUID } from "node:crypto";
+import { NextResponse } from "next/server";
+import connectDb from "@/db/connectDB";
+import Payment from "@/models/Payment";
+import User from "@/models/User";
+import { validateContributionInput } from "@/lib/contribution-validation";
+import {
+  getRazorpayTestCredentials,
+  razorpayRequest,
+} from "@/lib/razorpay-test";
+
+export const runtime = "nodejs";
+
+export async function POST(request) {
+  try {
+    const input = await request.json();
+    const validation = validateContributionInput(input);
+
+    if (!validation.ok) {
+      return NextResponse.json(validation, { status: 400 });
+    }
+
+    const { username, name, message, amount } = validation.value;
+    const { keyId } = getRazorpayTestCredentials();
+
+    await connectDb();
+
+    const creator = await User.findOne({ username })
+      .select("_id name username")
+      .lean();
+
+    if (!creator) {
+      return NextResponse.json(
+        { ok: false, error: "This creator page no longer exists." },
+        { status: 404 },
+      );
+    }
+
+    const receipt = `gf_${Date.now()}_${randomUUID().slice(0, 8)}`;
+    const order = await razorpayRequest("/orders", {
+      method: "POST",
+      body: JSON.stringify({
+        amount: amount * 100,
+        currency: "INR",
+        receipt,
+        notes: {
+          creator: creator.username,
+          mode: "GetFunds portfolio test",
+        },
+      }),
+    });
+
+    if (!order?.id || order.amount !== amount * 100) {
+      throw new Error("Razorpay returned an invalid test order.");
+    }
+
+    await Payment.create({
+      creatorId: creator._id,
+      name,
+      to_user: creator.username,
+      oid: order.id,
+      message,
+      amount,
+      mode: "razorpay-test",
+      status: "pending",
+      done: false,
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    });
+
+    return NextResponse.json({
+      ok: true,
+      checkout: {
+        keyId,
+        orderId: order.id,
+        amount: order.amount,
+        currency: order.currency,
+        creatorName: creator.name || creator.username,
+        supporterName: name,
+      },
+    });
+  } catch (error) {
+    const configurationError =
+      error.message?.includes("not configured") ||
+      error.message?.includes("Only Razorpay Test Mode");
+
+    return NextResponse.json(
+      { ok: false, error: error.message || "Could not create a Razorpay test order." },
+      { status: configurationError ? 503 : 500 },
+    );
+  }
+}
+
+=== FILE: ./app/api/razorpay/verify/route.js ===
+import {
+  createHmac,
+  timingSafeEqual,
+} from "node:crypto";
+import { revalidatePath } from "next/cache";
+import { NextResponse } from "next/server";
+import connectDb from "@/db/connectDB";
+import Payment from "@/models/Payment";
+import {
+  getRazorpayTestCredentials,
+  razorpayRequest,
+} from "@/lib/razorpay-test";
+
+export const runtime = "nodejs";
+
+const safeSignatureMatch = (expected, received) => {
+  if (!/^[a-f0-9]{64}$/i.test(received)) {
+    return false;
+  }
+
+  const expectedBuffer = Buffer.from(expected, "hex");
+  const receivedBuffer = Buffer.from(received, "hex");
+
+  return (
+    expectedBuffer.length === receivedBuffer.length &&
+    timingSafeEqual(expectedBuffer, receivedBuffer)
+  );
+};
+
+export async function POST(request) {
+  try {
+    const body = await request.json();
+    const orderId = String(body?.razorpay_order_id || "");
+    const paymentId = String(body?.razorpay_payment_id || "");
+    const signature = String(body?.razorpay_signature || "");
+
+    if (!/^order_[a-zA-Z0-9]+$/.test(orderId)) {
+      return NextResponse.json(
+        { ok: false, error: "Invalid Razorpay test order identifier." },
+        { status: 400 },
+      );
+    }
+
+    if (!/^pay_[a-zA-Z0-9]+$/.test(paymentId)) {
+      return NextResponse.json(
+        { ok: false, error: "Invalid Razorpay test payment identifier." },
+        { status: 400 },
+      );
+    }
+
+    const { keySecret } = getRazorpayTestCredentials();
+    await connectDb();
+
+    const pendingPayment = await Payment.findOne({
+      oid: orderId,
+      mode: "razorpay-test",
+    });
+
+    if (!pendingPayment) {
+      return NextResponse.json(
+        { ok: false, error: "The pending test contribution was not found." },
+        { status: 404 },
+      );
+    }
+
+    if (pendingPayment.done) {
+      if (pendingPayment.paymentId === paymentId) {
+        return NextResponse.json({
+          ok: true,
+          message: "This Razorpay test payment was already verified.",
+        });
+      }
+
+      return NextResponse.json(
+        { ok: false, error: "This test order has already been completed." },
+        { status: 409 },
+      );
+    }
+
+    const expectedSignature = createHmac("sha256", keySecret)
+      .update(`${pendingPayment.oid}|${paymentId}`)
+      .digest("hex");
+
+    if (!safeSignatureMatch(expectedSignature, signature)) {
+      return NextResponse.json(
+        { ok: false, error: "Razorpay payment signature verification failed." },
+        { status: 400 },
+      );
+    }
+
+    const remotePayment = await razorpayRequest(`/payments/${paymentId}`);
+    const acceptedStatuses = new Set(["authorized", "captured"]);
+
+    if (
+      remotePayment?.order_id !== pendingPayment.oid ||
+      remotePayment?.amount !== pendingPayment.amount * 100 ||
+      remotePayment?.currency !== "INR" ||
+      !acceptedStatuses.has(remotePayment?.status)
+    ) {
+      return NextResponse.json(
+        { ok: false, error: "Razorpay could not confirm the expected test payment." },
+        { status: 400 },
+      );
+    }
+
+    const completedPayment = await Payment.findOneAndUpdate(
+      { _id: pendingPayment._id, done: false },
+      {
+        $set: {
+          paymentId,
+          status: "completed",
+          done: true,
+        },
+        $unset: {
+          expiresAt: 1,
+        },
+      },
+      { new: true },
+    );
+
+    if (!completedPayment) {
+      return NextResponse.json(
+        { ok: false, error: "This test payment was processed concurrently." },
+        { status: 409 },
+      );
+    }
+
+    revalidatePath(`/${pendingPayment.to_user}`);
+    revalidatePath("/dashboard");
+
+    return NextResponse.json({
+      ok: true,
+      message: "Razorpay test payment verified. No real money was moved.",
+    });
+  } catch (error) {
+    const configurationError =
+      error.message?.includes("not configured") ||
+      error.message?.includes("Only Razorpay Test Mode");
+
+    return NextResponse.json(
+      { ok: false, error: error.message || "Could not verify the Razorpay test payment." },
+      { status: configurationError ? 503 : 500 },
+    );
+  }
+}
+
+=== FILE: ./app/globals.css ===
+@import "tailwindcss";
+
+:root {
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+code,
+pre,
+kbd,
+samp {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+=== FILE: ./app/login/layout.js ===
+export const metadata = {
+  title: "Creator Login",
+  description: "Sign in with GitHub to manage a GetFunds demo creator page.",
+};
+
+export default function LoginLayout({ children }) {
+  return children;
+}
+
+=== FILE: ./app/login/page.js ===
+"use client";
+
+import { useEffect } from "react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
+const Login = () => {
+  const { status } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.replace("/dashboard");
+    }
+  }, [router, status]);
+
+  return (
+    <main className="mx-auto flex min-h-[70vh] max-w-lg items-center px-6 py-16">
+      <section className="w-full rounded-2xl border border-slate-800 bg-slate-900/95 p-8 text-center shadow-2xl">
+        <span className="inline-flex rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-amber-200">
+          Portfolio demo
+        </span>
+        <h1 className="mt-5 text-3xl font-bold">Creator sign in</h1>
+        <p className="mt-3 text-slate-400">
+          GitHub verifies your identity. GetFunds stores your creator profile, public project folders, and verified test contribution data.
+        </p>
+
+        <button
+          type="button"
+          onClick={() => signIn("github", { callbackUrl: "/dashboard" })}
+          disabled={status === "loading"}
+          className="mt-8 inline-flex w-full items-center justify-center gap-3 rounded-lg bg-white px-5 py-3 font-semibold text-slate-950 hover:bg-slate-200 disabled:cursor-wait disabled:opacity-60"
+        >
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            className="size-6 fill-current"
+          >
+            <path d="M12 .7a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2.23c-3.22.7-3.9-1.37-3.9-1.37-.52-1.34-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.57-.29-5.27-1.28-5.27-5.68 0-1.26.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.04 0 0 .97-.31 3.16 1.18a10.96 10.96 0 0 1 5.76 0c2.2-1.49 3.16-1.18 3.16-1.18.63 1.58.23 2.75.11 3.04.74.8 1.19 1.82 1.19 3.08 0 4.42-2.71 5.38-5.29 5.67.42.36.79 1.07.79 2.16v3.22c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .7Z" />
+          </svg>
+          {status === "loading" ? "Checking session..." : "Continue with GitHub"}
+        </button>
+
+        <div className="mt-6 rounded-lg border border-blue-400/20 bg-blue-400/10 p-4 text-left text-sm text-blue-100">
+          <p className="font-semibold">What this interview demo proves</p>
+          <p className="mt-1 text-blue-200/80">
+            OAuth authentication, protected mutations, Razorpay test-signature verification, creator search, GridFS uploads, and MongoDB aggregation.
+          </p>
+        </div>
+      </section>
+    </main>
+  );
+};
+
+export default Login;
+
+=== FILE: ./app/[username]/page.js ===
+import PaymentPage from "@/components/PaymentPage";
+import { getPublicCreatorData } from "@/actions/useractions";
+import { notFound } from "next/navigation";
+
+const Username = async ({ params }) => {
+  const { username } = await params;
+  const creatorData = await getPublicCreatorData(username);
+
+  if (!creatorData) {
+    notFound();
+  }
+
+  return (
+    <PaymentPage
+      username={creatorData.profile.username}
+      initialData={creatorData}
+    />
+  );
+};
+
+export default Username;
+ 
+export async function generateMetadata({ params }) {
+  const { username } = await params;
+
+  return {
+    title: `Support ${username}`,
+    description: `View ${username}'s demo crowdfunding page and contribution analytics.`,
+  };
+}
+
+=== FILE: ./models/User.js ===
+import mongoose from "mongoose";
+const { Schema, model } = mongoose;
+
+const UserSchema = new Schema({
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true,
+  },
+  name: {
+    type: String,
+    trim: true,
+    maxlength: 80,
+  },
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true,
+    minlength: 3,
+    maxlength: 30,
+    match: /^[a-z0-9_]+$/,
+  },
+  profilepic: {
+    type: String,
+    trim: true,
+  },
+  coverpic: {
+    type: String,
+    trim: true,
+  },
+  fundingGoal: {
+    type: Number,
+    default: 10000,
+    min: 100,
+    max: 10000000,
+  },
+}, {
+  timestamps: true,
+});
+
+export default mongoose.models.User || model("User", UserSchema);
+
+=== FILE: ./models/Project.js ===
+import mongoose from "mongoose";
+
+const { Schema, model } = mongoose;
+
+const ProjectFileSchema = new Schema({
+  fileId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+  },
+  filename: {
+    type: String,
+    required: true,
+    trim: true,
+    maxlength: 180,
+  },
+  contentType: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  size: {
+    type: Number,
+    required: true,
+    min: 1,
+    max: 5 * 1024 * 1024,
+  },
+}, {
+  _id: false,
+});
+
+const ProjectSchema = new Schema({
+  creatorId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+    index: true,
+  },
+  title: {
+    type: String,
+    required: true,
+    trim: true,
+    minlength: 3,
+    maxlength: 80,
+  },
+  description: {
+    type: String,
+    trim: true,
+    maxlength: 500,
+  },
+  files: {
+    type: [ProjectFileSchema],
+    validate: {
+      validator: (files) => files.length > 0 && files.length <= 5,
+      message: "A project folder must contain between 1 and 5 files.",
+    },
+  },
+}, {
+  timestamps: true,
+});
+
+ProjectSchema.index({ creatorId: 1, updatedAt: -1 });
+
+export default mongoose.models.Project || model("Project", ProjectSchema);
+
+=== FILE: ./models/Payment.js ===
+import mongoose from "mongoose";
+const { Schema, model } = mongoose;
+
+const PaymentSchema = new Schema({
+  creatorId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    index: true,
+  },
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+    minlength: 2,
+    maxlength: 60,
+  },
+  to_user: {
+    type: String,
+    required: true,
+    lowercase: true,
+    trim: true,
+    index: true,
+  },
+  oid: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  paymentId: {
+    type: String,
+    trim: true,
+    index: true,
+  },
+  message: {
+    type: String,
+    trim: true,
+    maxlength: 240,
+  },
+  amount: {
+    type: Number,
+    required: true,
+    min: 1,
+    max: 100000,
+  },
+  mode: {
+    type: String,
+    enum: ["demo", "razorpay", "razorpay-test"],
+    default: "demo",
+  },
+  status: {
+    type: String,
+    enum: ["completed", "pending", "failed"],
+    default: "completed",
+    index: true,
+  },
+  done: {
+    type: Boolean,
+    default: true,
+  },
+  expiresAt: {
+    type: Date,
+  },
+}, {
+  timestamps: true,
+});
+
+PaymentSchema.index({ creatorId: 1, done: 1, amount: -1 });
+PaymentSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+
+export default mongoose.models.Payment || model("Payment", PaymentSchema);
+
+=== FILE: ./docs/04-resume-and-interview-guide.md ===
+# GetFunds resume and interview guide
+
+> **Historical interview guide:** this document maps the original Razorpay prototype. Use [05-current-demo-architecture.md](./05-current-demo-architecture.md) for defensible claims about the current implementation.
+
+## One-sentence description
+
+GetFunds is a full-stack Next.js crowdfunding application where creators authenticate with GitHub, configure a username-based fundraising page, and accept INR contributions through Razorpay while MongoDB stores creator profiles and payment state.
+
+## 60-second interview pitch
+
+> I built GetFunds as a full-stack crowdfunding platform using the Next.js App Router. A creator signs in through GitHub OAuth using NextAuth, and on first login the application provisions a local MongoDB user. The creator configures a public username-based fundraising page and their Razorpay account. A supporter can visit that page without logging in, submit a contribution, and the server creates a Razorpay order while recording a pending payment in MongoDB. The public page queries completed payments to calculate the raised amount and show the top ten supporters. I used server components for route validation and dynamic metadata, client components for interactive forms and checkout, and server actions for database and Razorpay operations. The project also taught me that payment verification, idempotency, strict server-side authorization, and secret handling are essential before production deployment.
+
+That pitch describes the actual code and proactively shows good engineering judgment about its current limits.
+
+## System flow to draw in an interview
+
+```mermaid
+flowchart LR
+    Creator[Creator] -->|GitHub OAuth| Auth[NextAuth]
+    Auth -->|provision and session| User[(MongoDB User)]
+    Creator -->|configure page| Dashboard[Creator dashboard]
+    Dashboard --> User
+
+    Supporter[Supporter] --> Page[Dynamic username page]
+    Page -->|read completed contributions| Payments[(MongoDB Payments)]
+    Supporter -->|submit contribution| ServerAction[Next.js server action]
+    ServerAction -->|create order| Razorpay[Razorpay]
+    ServerAction -->|store pending order| Payments
+    Razorpay -.->|verified callback or webhook needed| Payments
+```
+
+When drawing it, explain the solid path first. Then mention that the dashed arrow is the critical completion path and that the current repository still needs the callback handler.
+
+## Resume claims mapped to evidence
+
+### Header
+
+> GetFunds | Next.js, MongoDB, Razorpay, NextAuth.js
+
+This technology list is supported by `package.json` and the implementation:
+
+- Next.js 15 App Router provides routes, server components, route handlers, and server actions.
+- MongoDB is accessed through Mongoose and stores `User` and `Payment` documents.
+- Razorpay's server SDK creates INR orders, and its checkout script opens the hosted payment UI.
+- NextAuth.js handles GitHub OAuth and sessions.
+
+### Resume bullet 1
+
+> Developed a full-stack crowdfunding platform using Next.js and MongoDB, enabling developers to create and manage concurrent fundraising campaigns.
+
+#### What the code actually does
+
+- The frontend, backend operations, authentication endpoint, and database layer are in one Next.js application.
+- `User` stores the creator profile and payment configuration.
+- `Payment` stores contributions for a creator using `to_user`.
+- The dynamic route `/{username}` provides one public fundraising page for every creator.
+- `Dashboard` lets a creator manage page/profile settings.
+- Many creators can have active pages and receive independent payment orders at the same time.
+
+#### What “concurrent campaigns” means here
+
+The current version treats a creator's public page as the campaign. It supports many creators' pages concurrently, but it does not have a `Campaign` model and cannot create multiple separately named campaigns for one creator.
+
+If questioned, say:
+
+> In the first version, I modeled a campaign implicitly as a creator's username page. That allowed multiple creators to fundraise concurrently with a simple one-to-many User-to-Payment design. For multiple campaigns per creator, I would add a Campaign collection and make payments reference an immutable campaign ID.
+
+#### Stronger, precise resume wording
+
+> Built a full-stack crowdfunding platform with Next.js and MongoDB, enabling multiple creators to configure and operate independent username-based fundraising pages.
+
+Use the original sentence only if you later implement an explicit `Campaign` entity.
+
+### Resume bullet 2
+
+> Integrated Razorpay for secure financial transactions and built a dynamic dashboard for real-time funding tracking.
+
+#### Razorpay flow implemented in the code
+
+1. The browser converts rupees to paise and calls `initiate`.
+2. The server loads the target creator's Razorpay credentials.
+3. The Razorpay server SDK creates an INR order.
+4. MongoDB receives a `Payment` record with the order ID and `done: false`.
+5. The server returns the order to the browser.
+6. The Razorpay checkout script opens using the public key ID and order ID.
+7. `fetchpayments` displays only records where `done: true`.
+
+This pending-then-verified design is the correct shape: unverified orders should never count toward funds raised.
+
+#### What is not yet implemented
+
+`PaymentPage` points Razorpay to `/api/razorpay`, but that route does not exist in the repository. There is therefore no code that verifies the Razorpay signature and changes `done` to `true`. The browser query parameter `paymentdone=true` only shows a toast and must never be treated as payment proof.
+
+Also, the current dashboard is a profile/settings dashboard. Funding totals are calculated on the public creator page when its client component loads. The data is dynamic, but it is not live real-time data: there are no WebSockets, Server-Sent Events, change streams, or polling.
+
+#### How to explain secure payment processing
+
+Say that secure processing requires all of the following:
+
+- create orders server-side so the secret is not in browser code;
+- use the provider-hosted checkout so card details do not pass through GetFunds;
+- store an internal pending record linked by provider order ID;
+- verify the callback/webhook HMAC signature on the server;
+- compare expected amount, currency, and order identity;
+- make completion idempotent so retries do not double-count a payment; and
+- expose only completed payments in funding totals.
+
+The project currently implements order creation, hosted checkout, pending persistence, and completed-only reads. Be clear that callback verification is the required next piece.
+
+#### Stronger, precise resume wording for the current code
+
+> Integrated Razorpay order creation and hosted checkout, persisted pending payment records in MongoDB, and built a dynamic creator page that aggregates completed funding and ranks the top ten supporters.
+
+After implementing callback verification and a live dashboard, you can safely restore the stronger “secure transactions” and “real-time tracking” language.
+
+### Resume bullet 3
+
+> Implemented NextAuth.js for secure OAuth login and leveraged Server-Side Rendering (SSR) to optimize SEO and performance.
+
+#### OAuth flow implemented in the code
+
+1. `signIn("github")` starts authentication from the login page.
+2. NextAuth redirects the visitor to GitHub.
+3. GitHub returns identity/account data to the catch-all NextAuth route.
+4. The sign-in callback connects to MongoDB and tries to find or create the local user.
+5. The session callback loads the local username and exposes it as `session.user.name`.
+6. `SessionProvider` makes session state available to client components.
+7. The navbar changes its actions, and the dashboard redirects unauthenticated visitors.
+
+OAuth is preferable to storing passwords in this project because GitHub handles credential verification and GetFunds receives an identity after authorization. NextAuth also handles state/CSRF protections and session mechanics.
+
+#### SSR behavior implemented in the code
+
+- `app/[username]/page.js` is a server component.
+- It queries MongoDB before returning and calls `notFound()` for an invalid username.
+- `generateMetadata` builds a server-side title such as `Support alice - Get Me A Chai`.
+- The landing and about pages are server components by default.
+
+However, the visible creator record, payments, total, and leaderboard are fetched in `PaymentPage` after the client mounts. This means the most important creator content is client-rendered, not fully SSR.
+
+#### Why server rendering helps
+
+- Search engines and link previews can receive route-specific metadata.
+- The server can reject an invalid creator route before sending a successful page.
+- Server-rendered content can reduce the time to meaningful first paint and the amount of client JavaScript when data fetching stays in server components.
+- Server-only code can access the database without exposing database credentials.
+
+#### Stronger, precise resume wording
+
+> Implemented GitHub OAuth and session-aware navigation with NextAuth.js, and used Next.js server components plus dynamic metadata for server-side route validation and page-specific SEO.
+
+If you move `fetchuser` and `fetchpayments` into the server route and pass safe data into `PaymentPage`, then the broader SSR claim will be much more defensible.
+
+## Deep technical explanation by feature
+
+### Why use server actions?
+
+Server actions let client components call server-side operations without creating a separate REST endpoint for every form. They are useful here for profile updates, database reads, and Razorpay order creation. They are still network-accessible server entry points, so the application must validate input, verify the session for protected actions, and authorize the affected record.
+
+### Why maintain a local user after OAuth?
+
+The OAuth provider owns identity data, while GetFunds owns application data. A local user gives the project a stable place for the public username, page images, Razorpay configuration, and future campaign ownership. Email is currently the link, though a production model should store the provider name and provider account ID because emails can change.
+
+### Why keep `done: false` first?
+
+Creating an order does not mean money was paid. The pending state separates “checkout started” from “provider verified payment.” Only after a signed server callback/webhook should the record become completed and appear in totals.
+
+### Why sort and limit payments?
+
+`fetchpayments` sorts by amount descending and limits the result to ten. This implements the supporter leaderboard and prevents the initial page from returning an unbounded payment history. A full history would use pagination and a separate aggregate query for total amount/count.
+
+### How are totals calculated?
+
+The client receives up to ten completed payments and uses `reduce` to sum their amounts. This means the displayed total is actually the total of the top ten returned payments, not necessarily all completed contributions. For a correct overall total, MongoDB should use an aggregation pipeline such as `$match` plus `$group`, while the leaderboard remains a separate sorted/limited query.
+
+### What happens when a username changes?
+
+`updateProfile` checks for a collision, updates the user, and rewrites `Payment.to_user` from the old username to the new one. This keeps the contribution list connected to the new page. An immutable `creatorId` foreign key would avoid the bulk rewrite and reduce consistency risk.
+
+### How does the app support many users at once?
+
+Requests do not store creator state in a server process; creator identity comes from the route/session and durable data lives in MongoDB. That makes individual Next.js instances largely stateless and horizontally scalable. MongoDB handles simultaneous document operations, while each Razorpay order has a unique provider order ID. For robust concurrency, the schema still needs unique indexes and idempotent conditional updates.
+
+## Data model explanation
+
+```mermaid
+erDiagram
+    USER ||--o{ PAYMENT : receives
+    USER {
+        string email
+        string username
+        string profilepic
+        string coverpic
+        string razorpayid
+        string razorpaysecret
+    }
+    PAYMENT {
+        string oid
+        string to_user
+        string name
+        string message
+        number amount
+        boolean done
+    }
+```
+
+Explain it as a one-to-many relationship: one creator can receive many payments. `oid` connects a local payment to a Razorpay order, `to_user` selects the recipient, and `done` prevents a created-but-unpaid order from entering the completed totals.
+
+## Questions an interviewer is likely to ask
+
+### “Why Next.js instead of separate React and Express apps?”
+
+Next.js provided routing, server components, API route handlers, and server actions in one codebase. For this scope, that reduced deployment and integration overhead while still keeping browser code separate from database/payment-secret operations.
+
+### “Why MongoDB?”
+
+The creator and payment documents are straightforward to model with Mongoose, and MongoDB fits an early product whose profile fields may evolve. Payment integrity still benefits from relational-style practices: unique indexes, immutable references, transactions where needed, and explicit state transitions.
+
+### “How do you know a payment succeeded?”
+
+The authoritative proof must be a valid Razorpay signature received by a server endpoint or webhook, followed by provider-state validation. A frontend success message or redirect query parameter is not proof. In the current repository the handler is the main missing payment piece.
+
+### “How do you prevent duplicate payment processing?”
+
+Make the Razorpay order/payment ID unique, then perform a conditional update such as “change created to captured only if it is not already captured.” Webhook retries then return success without applying the payment twice.
+
+### “What makes the dashboard real time?”
+
+In the current version, values are dynamic at page load but not pushed live. True real-time behavior would use polling, SSE, or WebSockets after webhook verification. Say this plainly; do not claim sockets that are not in the code.
+
+### “Where is SSR used?”
+
+The dynamic username route runs on the server for existence validation, and metadata is generated on the server. The interactive contribution UI is a client component and currently fetches its main data after mount. A next improvement is to load safe creator/payment data in the server component.
+
+### “How do you protect Razorpay secrets?”
+
+Order creation uses the secret on the server, which is the right starting point. The current `fetchuser` response accidentally includes the secret, so production hardening requires a public field projection, server-side authorization for credential changes, encrypted storage, and ideally Razorpay's connected-account/OAuth model if applicable.
+
+### “What indexes would you add?”
+
+- unique index on `User.email`;
+- unique index on `User.username`;
+- unique index on `Payment.oid`;
+- compound index on `{ creatorId: 1, status: 1, amount: -1 }`; and
+- possibly `{ creatorId: 1, createdAt: -1 }` for payment history.
+
+### “What failure cases did you consider?”
+
+- Razorpay creates an order but the MongoDB insert fails;
+- a pending order is never paid;
+- callbacks are delayed, duplicated, forged, or received out of order;
+- the username changes while a payment is active;
+- two users choose the same username concurrently;
+- a client changes the amount or recipient in the request; and
+- MongoDB or the payment provider is temporarily unavailable.
+
+The remedies are validation, unique constraints, immutable IDs, idempotency, webhooks, reconciliation jobs, retries with bounded backoff, and good audit logs.
+
+## Honest review of the current implementation
+
+An interviewer may inspect the repository, so know these points.
+
+| Area | Good foundation | Current limitation | Production improvement |
+|---|---|---|---|
+| Authentication | GitHub OAuth through NextAuth | Sign-in lookup uses the wrong callback variable; protected actions lack server auth | Use `user.email`, connect explicitly, call `getServerSession`, authorize ownership |
+| Payments | Server-side order creation and pending record | Missing callback/signature verification | Add callback and webhook routes with idempotent verification |
+| Secrets | Razorpay SDK runs server-side | Full `User` object sends secret to clients | Public DTO/projection, encryption at rest, credential rotation |
+| Tracking | Completed-only query, total, top supporters | Only top ten are summed; no push updates | Separate aggregate totals, paginated history, polling/SSE/WebSocket |
+| Campaigns | Multiple username fundraising pages | No explicit Campaign model | Add campaign ID, owner, title, goal, deadline, status |
+| SSR/SEO | Server route validation and dynamic metadata | Main creator/payment content loads client-side | Fetch safe page data in server component; cache/revalidate deliberately |
+| Data integrity | Collision check and payment migration | No unique schema indexes; two updates are not atomic | Unique indexes, immutable creator IDs, transaction |
+| Validation | Pay button has simple UI checks | Server actions trust client data and raw update fields | Schema validation, allow-list updates, amount limits, rate limiting |
+
+## Suggested production payment workflow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Supporter
+    participant App as Next.js server
+    participant DB as MongoDB
+    participant RP as Razorpay
+
+    Supporter->>App: Submit validated contribution
+    App->>DB: Resolve creator and campaign by immutable ID
+    App->>RP: Create order with server-held credentials
+    RP-->>App: order_id, amount, currency
+    App->>DB: Upsert payment status=created with unique order_id
+    App-->>Supporter: Public key and checkout order
+    Supporter->>RP: Complete hosted checkout
+    RP->>App: Signed callback and webhook
+    App->>App: Verify signature and expected order details
+    App->>RP: Optionally fetch authoritative payment state
+    App->>DB: Idempotently transition created to captured
+    App-->>RP: Acknowledge webhook
+    App-->>Supporter: Render confirmed result from database state
+```
+
+## A practical improvement roadmap
+
+1. Add `/api/razorpay` callback and webhook verification.
+2. Stop returning `razorpaysecret`; add explicit public and private user DTOs.
+3. Authenticate and authorize `updateProfile` and credential reads on the server.
+4. Fix the NextAuth email lookup and username-collision handling.
+5. Add unique indexes and immutable creator references.
+6. Separate total/count aggregation from the top-ten leaderboard.
+7. Fetch public creator data in the server component for stronger SSR.
+8. Add a `Campaign` model for multiple campaigns per creator.
+9. Add payment history, status filters, and polling/SSE to a funding dashboard.
+10. Add tests for auth, order creation, signature validation, duplicate webhooks, and username changes.
+
+## Final resume version recommended for this repository
+
+> **GetFunds | Next.js, MongoDB, Razorpay, NextAuth.js**  
+> - Built a full-stack crowdfunding platform enabling multiple creators to configure and operate independent username-based fundraising pages backed by MongoDB.  
+> - Integrated Razorpay order creation and hosted checkout, persisted pending payment state, and built a dynamic page that aggregates completed funding and ranks top supporters.  
+> - Implemented GitHub OAuth and session-aware navigation with NextAuth.js, using Next.js server components and dynamic metadata for server-side route validation and page-specific SEO.
+
+This version is technically defensible against the present code. After completing the production roadmap, the original claims about secure transaction completion, real-time dashboard tracking, full SSR, and multiple campaigns per creator can be made without qualification.
+
+=== FILE: ./docs/images/README.md ===
+# GetFunds rendered diagram gallery
+
+Each diagram is available as a PNG for slides/documents and as an SVG for lossless scaling or editing.
+
+## 1. High-level system context
+
+![High-level system context](./png/01-system-context.png)
+
+[Open PNG](./png/01-system-context.png) · [Open SVG](./svg/01-system-context.svg) · [Read explanation](../01-high-level-system-diagram.md)
+
+## 2. End-to-end user journey
+
+![End-to-end user journey](./png/02-end-to-end-user-journey.png)
+
+[Open PNG](./png/02-end-to-end-user-journey.png) · [Open SVG](./svg/02-end-to-end-user-journey.svg) · [Read explanation](../02-workflow-diagrams.md#1-end-to-end-user-journey)
+
+## 3. Authentication and onboarding sequence
+
+![Authentication and onboarding sequence](./png/03-authentication-onboarding-sequence.png)
+
+[Open PNG](./png/03-authentication-onboarding-sequence.png) · [Open SVG](./svg/03-authentication-onboarding-sequence.svg) · [Read explanation](../02-workflow-diagrams.md#2-authentication-and-creator-onboarding)
+
+## 4. Creator profile update sequence
+
+![Creator profile update sequence](./png/04-creator-profile-update-sequence.png)
+
+[Open PNG](./png/04-creator-profile-update-sequence.png) · [Open SVG](./svg/04-creator-profile-update-sequence.svg) · [Read explanation](../02-workflow-diagrams.md#3-creator-profile-update)
+
+## 5. Public creator-page read sequence
+
+![Public creator-page read sequence](./png/05-public-creator-page-read-sequence.png)
+
+[Open PNG](./png/05-public-creator-page-read-sequence.png) · [Open SVG](./svg/05-public-creator-page-read-sequence.svg) · [Read explanation](../02-workflow-diagrams.md#4-public-creator-page-read-workflow)
+
+## 6. Payment initiation and completion sequence
+
+![Payment initiation and completion sequence](./png/06-payment-initiation-completion-sequence.png)
+
+[Open PNG](./png/06-payment-initiation-completion-sequence.png) · [Open SVG](./svg/06-payment-initiation-completion-sequence.svg) · [Read explanation](../02-workflow-diagrams.md#5-payment-initiation-and-intended-completion)
+
+## 7. Payment state machine
+
+![Payment state machine](./png/07-payment-state-machine.png)
+
+[Open PNG](./png/07-payment-state-machine.png) · [Open SVG](./svg/07-payment-state-machine.svg) · [Read explanation](../02-workflow-diagrams.md#6-payment-state-machine)
+
+## 8. Component architecture
+
+![Component architecture](./png/08-component-architecture.png)
+
+[Open PNG](./png/08-component-architecture.png) · [Open SVG](./svg/08-component-architecture.svg) · [Read explanation](../03-architecture-diagram.md#component-architecture)
+
+## 9. Client/server execution boundary
+
+![Client/server execution boundary](./png/09-client-server-boundary.png)
+
+[Open PNG](./png/09-client-server-boundary.png) · [Open SVG](./svg/09-client-server-boundary.svg) · [Read explanation](../03-architecture-diagram.md#clientserver-execution-boundary)
+
+## 10. Data architecture
+
+![Data architecture](./png/10-data-architecture.png)
+
+[Open PNG](./png/10-data-architecture.png) · [Open SVG](./svg/10-data-architecture.svg) · [Read explanation](../03-architecture-diagram.md#data-architecture)
+
+## 11. Interview system flow
+
+![Interview system flow](./png/11-interview-system-flow.png)
+
+[Open PNG](./png/11-interview-system-flow.png) · [Open SVG](./svg/11-interview-system-flow.svg) · [Read explanation](../04-resume-and-interview-guide.md#system-flow-to-draw-in-an-interview)
+
+## 12. Interview data model
+
+![Interview data model](./png/12-interview-data-model.png)
+
+[Open PNG](./png/12-interview-data-model.png) · [Open SVG](./svg/12-interview-data-model.svg) · [Read explanation](../04-resume-and-interview-guide.md#data-model-explanation)
+
+## 13. Production payment workflow
+
+![Production payment workflow](./png/13-production-payment-workflow.png)
+
+[Open PNG](./png/13-production-payment-workflow.png) · [Open SVG](./svg/13-production-payment-workflow.svg) · [Read explanation](../04-resume-and-interview-guide.md#suggested-production-payment-workflow)
+
+=== FILE: ./docs/05-current-demo-architecture.md ===
+# Current GetFunds architecture
+
+**Status:** current runtime after the Razorpay Test Mode, creator discovery, and GridFS portfolio upgrade.
+
+GetFunds is a no-real-money portfolio application. It uses Razorpay's official Test Mode Checkout and mock bank screens, but the server explicitly rejects every key that does not begin with `rzp_test_`.
+
+## System overview
+
+```mermaid
+flowchart LR
+    Creator[Creator] -->|GitHub OAuth| Auth[NextAuth]
+    Auth --> Users[(MongoDB users)]
+    Creator --> Dashboard[Protected dashboard]
+    Dashboard -->|profile + editable goal| Users
+    Dashboard -->|folder metadata| Projects[(MongoDB projects)]
+    Dashboard -->|file bytes| GridFS[(MongoDB GridFS)]
+
+    Visitor[Visitor] --> Search[Creator search]
+    Search --> Users
+    Search --> Profile[Public creator profile]
+    Profile --> Projects
+    Profile --> GridFS
+
+    Visitor -->|test contribution| OrderAPI[Create test order API]
+    OrderAPI --> Razorpay[Razorpay Test API]
+    OrderAPI --> Payments[(MongoDB payments)]
+    Razorpay --> Checkout[Razorpay Test Checkout]
+    Checkout --> VerifyAPI[Signature verification API]
+    VerifyAPI --> Razorpay
+    VerifyAPI --> Payments
+    Payments --> Profile
+    Payments --> Dashboard
+```
+
+## Razorpay Test Mode payment lifecycle
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Visitor
+    participant UI as PaymentPage
+    participant Order as POST /api/razorpay/order
+    participant DB as MongoDB Payment
+    participant RP as Razorpay Test API
+    participant Checkout as Razorpay Checkout
+    participant Verify as POST /api/razorpay/verify
+
+    Visitor->>UI: Enter name, message, and test amount
+    UI->>Order: Send untrusted contribution input
+    Order->>Order: Validate fields and require rzp_test key
+    Order->>RP: Create INR order in paise
+    RP-->>Order: order_id
+    Order->>DB: Insert pending, done=false record
+    Order-->>UI: Return public key + order details
+    UI->>Checkout: Open official Test Checkout
+    Visitor->>Checkout: Choose mock success or failure
+    Checkout-->>UI: payment_id + order_id + signature
+    UI->>Verify: Send returned fields
+    Verify->>Verify: HMAC-SHA256(server order_id|payment_id)
+    Verify->>RP: Fetch payment status and amount
+    RP-->>Verify: Test payment details
+    Verify->>DB: Atomic done=false to done=true update
+    Verify-->>UI: Verified test success
+    UI->>UI: Refresh totals, progress, and leaderboard
+```
+
+Important security decisions:
+
+- `RAZORPAY_KEY_SECRET` never reaches the browser.
+- Every contribution creates an order on the server before Checkout opens.
+- The amount sent to Razorpay is derived from validated server input and converted from rupees to paise.
+- Verification uses the order ID stored by the server, not an untrusted replacement.
+- Signatures use HMAC-SHA256 and `timingSafeEqual`.
+- The verification route also checks remote order ID, amount, currency, and payment status.
+- Completion is idempotent: only a row with `done:false` can transition to completed.
+- Unfinished test orders receive a 24-hour TTL; verified rows remove that expiry.
+- Only `done:true` rows contribute to public analytics.
+- Live Razorpay keys are rejected intentionally.
+
+Razorpay Test Mode can display card, wallet, netbanking, and UPI mock screens. `success@razorpay` and `failure@razorpay` simulate the two UPI outcomes. No real funds are charged or settled.
+
+## Editable creator funding target
+
+`User.fundingGoal` is a validated number between ₹100 and ₹1,00,00,000. The creator edits it in the protected dashboard. `updateProfile` obtains ownership from the NextAuth session, ignores browser-supplied identity fields, and updates only an explicit allow-list.
+
+The public progress calculation is:
+
+```text
+progress percentage = min(100, round(completed test funding / creator funding goal × 100))
+```
+
+₹10,000 is only the schema default for a new creator; it is no longer an immutable UI constant.
+
+## Creator search and similar-name suggestions
+
+The global navigation includes a debounced search box:
+
+1. Queries shorter than two characters do not hit MongoDB.
+2. Regex metacharacters are escaped before a database query is built.
+3. Username/display-name prefix matches are returned first.
+4. Remaining slots use substring matches as similar-name recommendations.
+5. Only `_id`, display name, username, and profile image are serialized.
+6. Selecting a result opens `/{username}`.
+
+Every search result is a normal public creator page. Visitors can view project folders and start a Razorpay test contribution without signing in.
+
+## Project folders and GridFS
+
+A project folder is a `Project` document owned by immutable `creatorId`. It contains title, description, timestamps, and safe file metadata. Actual bytes are stored in the `projectFiles` GridFS bucket.
+
+Why GridFS instead of `public/uploads/{username}`:
+
+- a deployed Next.js filesystem may be read-only or ephemeral;
+- username changes should not move files;
+- database ownership is easier to enforce;
+- large file bytes do not consume a normal MongoDB document's 16 MB limit; and
+- files can be streamed instead of loading the entire stored object into the response.
+
+Upload controls:
+
+- creator must have an authenticated server session;
+- 1-5 files per folder;
+- maximum 5 MB per file;
+- maximum 15 MB total per folder;
+- allow-listed common code, document, text, archive, and image extensions;
+- path separators/control characters are removed from filenames;
+- partial GridFS uploads are deleted when an upload fails; and
+- project deletion checks ownership and deletes associated GridFS objects.
+
+Public download controls:
+
+- the file ID must exist in a public `Project` document;
+- safe images, PDF, Markdown, and plain text may render inline;
+- other formats are forced to download;
+- `X-Content-Type-Options: nosniff` prevents browser type guessing; and
+- HTML/code files cannot execute as GetFunds application pages.
+
+## Data model
+
+```mermaid
+erDiagram
+    USER ||--o{ PAYMENT : receives
+    USER ||--o{ PROJECT : publishes
+    PROJECT ||--|{ GRIDFS_FILE : contains
+
+    USER {
+        ObjectId _id
+        string email UK
+        string username UK
+        string name
+        string profilepic
+        string coverpic
+        number fundingGoal
+    }
+
+    PAYMENT {
+        ObjectId _id
+        ObjectId creatorId
+        string to_user
+        string oid UK
+        string paymentId
+        string name
+        string message
+        number amount
+        string mode
+        string status
+        boolean done
+    }
+
+    PROJECT {
+        ObjectId _id
+        ObjectId creatorId
+        string title
+        string description
+        array files
+    }
+
+    GRIDFS_FILE {
+        ObjectId _id
+        string filename
+        string contentType
+        number length
+        object metadata
+    }
+```
+
+`to_user` and `mode: "demo"` remain readable for old development rows. New Checkout records use immutable `creatorId`, `mode: "razorpay-test"`, a Razorpay order ID, and a verified payment ID.
+
+## API and action boundaries
+
+| Boundary | Authentication | Responsibility |
+|---|---:|---|
+| `searchCreators` server action | Public | Safe creator-name suggestions |
+| `getPublicCreatorData` server action | Public | Safe profile, analytics, projects, and test-checkout availability |
+| `getDashboardData` server action | Required | Private creator dashboard data |
+| `updateProfile` server action | Required | Allow-listed profile and funding-goal mutation |
+| `POST /api/razorpay/order` | Public | Validate input, create Razorpay test order, insert pending row |
+| `POST /api/razorpay/verify` | Public with signed result | Verify HMAC and remote test payment, complete row idempotently |
+| `POST /api/projects` | Required | Validate and upload a creator project folder |
+| `DELETE /api/projects/[projectId]` | Required owner | Delete folder and its GridFS files |
+| `GET /api/projects/files/[fileId]` | Public | Stream a file referenced by a public project |
+
+## Required environment variables
+
+```env
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=strong-random-value
+GITHUB_ID=github-oauth-client-id
+GITHUB_SECRET=github-oauth-client-secret
+MONGO_URI=mongodb-connection-string
+RAZORPAY_KEY_ID=rzp_test_...
+RAZORPAY_KEY_SECRET=test-key-secret
+```
+
+## Honest production limitations
+
+This remains an interview project rather than a live crowdfunding platform. A production system should add persistent distributed rate limiting, abuse protection, malware scanning, object storage/CDN delivery, Razorpay webhooks for browser-drop recovery, captured-payment-only fulfillment, reconciliation jobs, privacy controls, moderation, and a deployment-specific retention policy.
+
+## Interview pitch
+
+> GetFunds is a full-stack crowdfunding portfolio that uses GitHub OAuth for creator identity, server-authorized profile and funding-goal mutations, global creator discovery, and public project portfolios stored with MongoDB GridFS. Visitors can open Razorpay's official Test Checkout on any creator profile. The server creates every order, stores a pending record, verifies the returned HMAC signature with a timing-safe comparison, confirms remote payment fields, and atomically completes the contribution before analytics include it. Live keys are rejected, so the project demonstrates a realistic gateway lifecycle without moving real money.
+
+=== FILE: ./docs/README.md ===
+# GetFunds project documentation
+
+This documentation explains the GetFunds crowdfunding application from current and historical views.
+
+| Document | Best used for | Main question answered |
+|---|---|---|
+| [Current demo architecture](./05-current-demo-architecture.md) | **Start here** | What does the refactored, no-real-money implementation do now? |
+| [High-level system diagram](./01-high-level-system-diagram.md) | First overview | Who uses the system, and which external systems does it depend on? |
+| [Workflow diagrams](./02-workflow-diagrams.md) | Request and user flows | What happens during login, profile setup, page viewing, and payment? |
+| [Architecture diagram](./03-architecture-diagram.md) | Technical deep dive | How are the UI, server code, authentication, database, and Razorpay integration organized? |
+| [Resume and interview guide](./04-resume-and-interview-guide.md) | Interview preparation | How does the code support each resume bullet, and how should the project be explained accurately? |
+| [Rendered image gallery](./images/README.md) | Slides, reports, and visual review | Where can I open or download PNG and SVG versions of every diagram? |
+
+## Suggested reading order
+
+1. Start with the current demo architecture.
+2. Use documents 01-04 to study the original Razorpay prototype and its shortcomings.
+3. Compare both versions to explain the refactoring decisions in an interview.
+
+## Project vocabulary
+
+- **Creator**: an authenticated GitHub user who owns a public fundraising page.
+- **Supporter**: a visitor who opens a creator's page and attempts a contribution.
+- **Fundraising page**: the dynamic `/{username}` route. In the current data model, this page is the campaign; there is no separate `Campaign` collection.
+- **Pending payment**: a `Payment` document created after Razorpay creates an order, with `done: false`.
+- **Completed payment**: a payment whose `done` field has been verified and changed to `true`.
+
+## Important scope note
+
+The application was refactored on 2026-08-30 into a safe demo-contribution product with creator analytics. Documents 01-04 preserve the original Razorpay-oriented implementation for historical learning. Document 05 describes the current runtime.
+
+=== FILE: ./docs/03-architecture-diagram.md ===
+# GetFunds architecture diagram
+
+> **Historical architecture:** this document describes the original Razorpay prototype. The current no-real-money implementation is documented in [05-current-demo-architecture.md](./05-current-demo-architecture.md).
+
+## Component architecture
+
+```mermaid
+flowchart TB
+    subgraph Browser[Browser]
+        Navbar[Navbar client component]
+        Login[Login client page]
+        Dashboard[Dashboard client component]
+        PaymentPage[PaymentPage client component]
+        Checkout[Razorpay Checkout script]
+    end
+
+    subgraph Next[Next.js 15 application]
+        Layout[App Router layout and server pages]
+        DynamicRoute[Dynamic /username server route]
+        Auth[NextAuth route handler]
+        Session[SessionProvider and session callbacks]
+
+        subgraph ServerActions[Server actions]
+            FetchUser[fetchuser]
+            FetchPayments[fetchpayments]
+            UpdateProfile[updateProfile]
+            Initiate[initiate]
+        end
+
+        DBConnection[connectDb]
+        UserModel[User Mongoose model]
+        PaymentModel[Payment Mongoose model]
+        MissingCallback[Expected Razorpay callback handler]
+    end
+
+    subgraph External[External services]
+        GitHub[GitHub OAuth]
+        Razorpay[Razorpay Orders and Payments]
+        Mongo[(MongoDB)]
+    end
+
+    Navbar --> Session
+    Login --> Auth
+    Auth <--> GitHub
+    Auth --> UserModel
+    Dashboard --> FetchUser
+    Dashboard --> UpdateProfile
+    PaymentPage --> FetchUser
+    PaymentPage --> FetchPayments
+    PaymentPage --> Initiate
+    PaymentPage <--> Checkout
+    Checkout <--> Razorpay
+    Initiate --> Razorpay
+    DynamicRoute --> UserModel
+
+    FetchUser --> UserModel
+    FetchPayments --> PaymentModel
+    UpdateProfile --> UserModel
+    UpdateProfile --> PaymentModel
+    Initiate --> UserModel
+    Initiate --> PaymentModel
+    UserModel --> DBConnection
+    PaymentModel --> DBConnection
+    DBConnection --> Mongo
+
+    Razorpay -.-> MissingCallback
+    MissingCallback -.-> PaymentModel
+
+    classDef missing fill:#fff3cd,stroke:#d39e00,color:#111;
+    class MissingCallback missing;
+```
+
+## Architectural style
+
+The application uses a **full-stack modular monolith**:
+
+- **full-stack**, because React UI and server/database/payment logic live in one Next.js application;
+- **modular**, because components, server actions, models, database connection code, and route handlers are separated by responsibility; and
+- **monolith**, because these modules are built and deployed as one unit rather than as independent services.
+
+This architecture avoids the operational cost of microservices while the product is small. The main risk is that access-control and data-serialization boundaries can become unclear, so server actions must be treated as public server entry points and secured accordingly.
+
+## Layer-by-layer explanation
+
+### 1. Presentation layer
+
+The App Router supplies pages and layouts. `app/layout.js` wraps every page with `SessionProvider`, `Navbar`, and `Footer`. Components marked `"use client"` handle state, effects, clicks, navigation, toasts, and Razorpay Checkout.
+
+| UI module | Responsibility | Rendering behavior |
+|---|---|---|
+| `app/page.js` | Landing page | Server component by default |
+| `app/about/page.js` | Product information | Server component by default |
+| `app/[username]/page.js` | Validate username and provide dynamic metadata | Server component |
+| `components/PaymentPage.js` | Contribution form, totals, and leaderboard | Client component |
+| `components/Dashboard.js` | Creator profile/settings form | Client component |
+| `app/login/page.js` | Starts GitHub OAuth | Client component |
+| `components/Navbar.js` | Session-aware navigation | Client component |
+
+### 2. Application/service layer
+
+`actions/useractions.js` is the application boundary for domain operations:
+
+- `fetchuser(username)` loads a creator;
+- `fetchpayments(username)` loads up to ten completed payments, ordered by amount;
+- `updateProfile(data, oldusername)` updates a creator and migrates payment ownership when the username changes; and
+- `initiate(amount, to_username, paymentform)` creates a Razorpay order and a pending local payment.
+
+Because this file starts with `"use server"`, Next.js exposes exported actions to client components through generated RPC-style calls. This keeps SDK secrets and Mongoose code out of the browser bundle, but it does not automatically provide authorization or validation. Each action must still verify the session, validate data, and return only safe fields.
+
+### 3. Authentication layer
+
+`app/api/auth/[...nextauth]/route.js` configures GitHubProvider and exports the NextAuth handler for both GET and POST. The sign-in callback provisions a local user; the session callback adds the local username to `session.user.name`.
+
+The route name is a catch-all dynamic API route, so it handles endpoints such as sign-in, callback, sign-out, session lookup, and CSRF operations under `/api/auth/*`.
+
+### 4. Persistence layer
+
+`db/connectDB.js` opens the Mongoose connection from `MONGO_URI`. Model files use the common hot-reload-safe pattern:
+
+```js
+mongoose.models.User || model("User", UserSchema)
+```
+
+That prevents model recompilation errors during Next.js development reloads.
+
+### 5. Payment integration layer
+
+Razorpay has two halves:
+
+- the server SDK creates an order with secret credentials; and
+- the checkout script collects payment details in Razorpay's UI.
+
+The browser should receive only the public key ID, order ID, amount, and display configuration. The key secret must remain server-side. Payment success must be verified on the server; a browser redirect alone is not trustworthy.
+
+## Client/server execution boundary
+
+```mermaid
+flowchart LR
+    subgraph Client[Runs in the browser]
+        State[React state and effects]
+        SessionHook[useSession]
+        Forms[Dashboard and payment forms]
+        RZPCheckout[Razorpay Checkout]
+    end
+
+    subgraph Server[Runs in Next.js]
+        ServerPages[Server components and metadata]
+        Actions[Server actions]
+        AuthRoute[NextAuth route]
+        Secrets[Environment variables and provider secrets]
+        Models[Mongoose models]
+    end
+
+    subgraph Data[Private infrastructure]
+        Mongo[(MongoDB)]
+        Provider[Razorpay server API]
+    end
+
+    Client -->|rendered requests and action payloads| Server
+    Server -->|serialized safe results| Client
+    Models <--> Mongo
+    Actions <--> Provider
+    Secrets --> AuthRoute
+    Secrets --> Actions
+```
+
+The phrase “serialized safe results” describes the required boundary. Currently `fetchuser` returns the complete `User` object, including the Razorpay secret, which violates that boundary. A public query should explicitly select only fields such as `username`, `name`, `profilepic`, `coverpic`, and `razorpayid`.
+
+## Data architecture
+
+```mermaid
+erDiagram
+    USER ||--o{ PAYMENT : receives
+
+    USER {
+        ObjectId _id
+        string email
+        string name
+        string username
+        string profilepic
+        string coverpic
+        string razorpayid
+        string razorpaysecret
+        date createdAt
+        date updatedAt
+    }
+
+    PAYMENT {
+        ObjectId _id
+        string name
+        string to_user
+        string oid
+        string message
+        number amount
+        boolean done
+        date createdAt
+        date updatedAt
+    }
+```
+
+The relationship is implemented through `Payment.to_user -> User.username`, not an ObjectId reference. This makes page queries readable but creates extra work when a username changes: `updateProfile` must rewrite all associated payments.
+
+A production model would normally:
+
+- make `User.email` and `User.username` unique and indexed;
+- store an immutable `creatorId` ObjectId in `Payment`;
+- make `Payment.oid` unique for idempotency;
+- store money as integer paise;
+- replace `done` with a payment-status enum;
+- encrypt provider credentials at rest or use a connected-account/token model; and
+- optionally introduce `Campaign`, allowing one creator to own multiple campaigns.
+
+An expanded relationship would be:
+
+```text
+User 1 --- many Campaigns 1 --- many Payments
+```
+
+## Rendering architecture and SSR claim
+
+Next.js uses a mix of server and client rendering in this repository:
+
+- `/`, `/about`, `/dashboard`'s route wrapper, and `/[username]` are server components by default;
+- `/[username]` queries MongoDB before returning and can emit a server-generated 404;
+- `generateMetadata` creates a dynamic title on the server;
+- `PaymentPage`, `Dashboard`, `Login`, and `Navbar` are client components; and
+- creator details and payment totals are fetched from the client after mount.
+
+Therefore, it is accurate to say the application **uses Next.js server components and server-generated metadata**, helping routing and page-specific SEO. It is too strong to say the complete funding page is SSR, because the primary profile/payment content is not included in the initial server-rendered HTML. Moving those reads into `app/[username]/page.js` and passing safe data as props would make the claim stronger and improve first-content rendering.
+
+## Environment and secret ownership
+
+| Variable | Used for | Correct visibility |
+|---|---|---|
+| `MONGO_URI` | MongoDB connection | Server only |
+| `GITHUB_ID` | GitHub OAuth app identity | Server configuration |
+| `GITHUB_SECRET` | GitHub OAuth secret | Server only |
+| `NEXTAUTH_SECRET` | Signs/encrypts NextAuth values | Server only |
+| `NEXTAUTH_URL` | OAuth callback base URL | Server configuration |
+| `NEXT_PUBLIC_URL` | Razorpay callback URL base | Public by naming convention |
+
+Creator Razorpay secrets are stored in MongoDB rather than environment variables because each creator supplies separate credentials. They must still remain server-only and should be encrypted at rest.
+
+## Current non-functional characteristics
+
+### Scalability
+
+Stateless Next.js instances can scale horizontally if sessions remain JWT-based and MongoDB/Razorpay are external. Database connection reuse, indexes, pagination, rate limiting, and caching would become important under load.
+
+### Consistency
+
+Payment initiation spans two systems: Razorpay order creation and MongoDB insertion. If one succeeds and the other fails, reconciliation is needed. Webhooks and an idempotent status update are the standard recovery mechanism.
+
+### Security
+
+The strongest current boundary is server-side Razorpay order creation. The largest gaps are public serialization of creator secrets, missing callback verification, missing server-action authorization, and overly broad profile updates from raw form data.
+
+### Observability
+
+The repository logs MongoDB connection state but has no structured payment/audit logging, metrics, tracing, or alerting. Production payment flows should attach a request/correlation ID and record state transitions without secrets.
+
+## Current architecture versus production target
+
+| Concern | Current repository | Production target |
+|---|---|---|
+| Campaign model | One public page per username | Separate Campaign entity with goals/status |
+| Payment completion | Callback URL referenced, handler absent | Verified callback plus webhook reconciliation |
+| Dashboard | Creator profile configuration | Funding KPIs, history, filters, polling or push updates |
+| Public data | Full user object returned | Allow-listed public projection |
+| Authorization | Mostly client-side redirect | Session checks inside every protected server action |
+| SSR | Route validation and metadata on server | Creator/payment content fetched in server component |
+| Data integrity | Mutable username relationship | Immutable IDs, unique indexes, transaction/idempotency |
+
+=== FILE: ./docs/02-workflow-diagrams.md ===
+# GetFunds workflow diagrams
+
+> **Historical architecture:** this document describes the original Razorpay prototype. The current no-real-money implementation is documented in [05-current-demo-architecture.md](./05-current-demo-architecture.md).
+
+This document describes the application as a set of user and request workflows. It separates behavior that exists now from payment completion behavior that the UI expects but the repository does not yet implement.
+
+## 1. End-to-end user journey
+
+```mermaid
+flowchart TD
+    Start([Visitor opens GetFunds]) --> Choice{What do they want to do?}
+
+    Choice -->|Become a creator| Login[Open /login]
+    Login --> GitHub[Sign in with GitHub]
+    GitHub --> LocalUser[Find or create MongoDB user]
+    LocalUser --> Session[Create NextAuth session]
+    Session --> Dashboard[Open /dashboard]
+    Dashboard --> Configure[Set username, images, and Razorpay credentials]
+    Configure --> PublicPage[Share /username page]
+
+    Choice -->|Support a creator| PublicPage
+    PublicPage --> Load[Load creator and top completed payments]
+    Load --> Form[Enter name, message, and amount]
+    Form --> Order[Create Razorpay order and pending Payment]
+    Order --> Checkout[Open Razorpay Checkout]
+    Checkout --> Result{Payment result}
+    Result -->|failure or cancel| RemainsPending[Payment remains pending]
+    Result -->|success| Callback[Payment callback and signature verification]
+    Callback --> Completed[Mark Payment done]
+    Completed --> Refresh[Reload creator page and show contribution]
+
+    classDef missing fill:#fff3cd,stroke:#d39e00,color:#111;
+    class Callback,Completed missing;
+```
+
+`Callback` and `Completed` are highlighted because the configured `/api/razorpay` callback is absent. Until it exists, newly created records remain pending and are excluded by `fetchpayments`.
+
+## 2. Authentication and creator onboarding
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Creator
+    participant Login as Login client page
+    participant Auth as NextAuth route
+    participant GH as GitHub OAuth
+    participant DB as MongoDB
+    participant Dashboard as Dashboard client
+
+    Creator->>Login: Click Continue with GitHub
+    Login->>Auth: signIn("github")
+    Auth->>GH: Redirect for authorization
+    GH-->>Auth: OAuth account and user profile
+    Auth->>DB: Find local User by email
+    alt first sign-in
+        Auth->>DB: Create User with email and derived username
+    else existing creator
+        DB-->>Auth: Return User
+    end
+    Auth->>DB: Load username in session callback
+    Auth-->>Login: Set session and redirect
+    Login->>Dashboard: Navigate to /dashboard
+    Dashboard->>DB: fetchuser(session.user.name)
+    DB-->>Dashboard: Creator profile
+```
+
+### Why both GitHub and MongoDB are needed
+
+GitHub authenticates the person but does not contain GetFunds-specific fields such as the cover image, public username, or Razorpay configuration. The local `User` record connects the external identity (`email`) to application-owned data.
+
+### Session behavior
+
+No NextAuth database adapter or explicit session strategy is configured, so NextAuth v4 uses its default JWT-based session strategy for an OAuth-only configuration. The `session` callback replaces `session.user.name` with the database username; components then use that value to build the public URL and fetch the creator profile.
+
+### Current implementation cautions
+
+- The sign-in callback queries `User.findOne({ email: email })`, but for the GitHub provider it should use `user.email`; the callback's `email` argument is associated with the Email provider flow.
+- The session callback performs a database query without explicitly calling `connectDb()`.
+- Username creation uses the email prefix, so collisions are possible and should be handled.
+- The dashboard redirects inside an effect whose dependency list is empty; it should account for NextAuth's loading state.
+
+## 3. Creator profile update
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Creator
+    participant UI as Dashboard client
+    participant Action as updateProfile server action
+    participant Users as User collection
+    participant Payments as Payment collection
+
+    Creator->>UI: Edit profile and submit form
+    UI->>Action: Send FormData and old username
+    Action->>Users: Check new username when it changed
+    alt username already exists
+        Users-->>Action: Existing user
+        Action-->>UI: Return username error
+    else username available or unchanged
+        Action->>Users: Update creator by email
+        opt username changed
+            Action->>Payments: Replace old to_user with new username
+        end
+        Action-->>UI: Update complete
+        UI-->>Creator: Show toast
+    end
+```
+
+Updating related payment records preserves the creator's contribution history when the public URL changes. In production, both updates should be performed in a MongoDB transaction where supported, and the server action should derive the authenticated email/username from the server session rather than trusting fields sent by the browser.
+
+The UI currently always displays “Profile Updated” and does not inspect the returned `{ error }` value. That should be corrected before presenting username-conflict handling as complete.
+
+## 4. Public creator-page read workflow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Supporter
+    participant Route as /[username] server component
+    participant DB as MongoDB
+    participant Page as PaymentPage client component
+    participant Actions as Server actions
+
+    Supporter->>Route: GET /alice
+    Route->>DB: Find User with username alice
+    alt user does not exist
+        Route-->>Supporter: Next.js 404
+    else user exists
+        Route-->>Supporter: Render page shell and client component
+        Page->>Actions: fetchuser(alice)
+        Actions->>DB: Read User
+        DB-->>Actions: User document
+        Actions-->>Page: Serialized user
+        Page->>Actions: fetchpayments(alice)
+        Actions->>DB: Find done payments, sort amount descending, limit 10
+        DB-->>Page: Top completed payments
+        Page-->>Supporter: Show count, total, and leaderboard
+    end
+```
+
+The dynamic route itself runs on the server and can return a server-side 404. `generateMetadata` also produces a per-creator title on the server. However, the profile and payment data displayed by `PaymentPage` is fetched after hydration in `useEffect`, so the main funding data is client-loaded rather than fully server-rendered HTML.
+
+The label “real-time” should therefore be interpreted as dynamically calculated from current database results when the page loads. There is no WebSocket, Server-Sent Events, polling interval, or MongoDB change stream that pushes live updates to an already open browser.
+
+## 5. Payment initiation and intended completion
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Supporter
+    participant UI as PaymentPage client
+    participant Action as initiate server action
+    participant DB as MongoDB
+    participant RP as Razorpay
+    participant Callback as Expected /api/razorpay route
+
+    Supporter->>UI: Submit amount, name, and message
+    UI->>Action: initiate(amount in paise, username, form)
+    Action->>DB: Load creator Razorpay credentials
+    Action->>RP: Create INR order
+    RP-->>Action: Return order with order_id
+    Action->>DB: Insert Payment(done=false, oid=order_id)
+    Action-->>UI: Return Razorpay order
+    UI->>RP: Open checkout with public key and order_id
+    Supporter->>RP: Authorize payment
+    RP-->>Callback: POST payment result and signature
+    Note over Callback: Route is referenced but missing in current repository
+    Callback->>Callback: Recompute and compare HMAC signature
+    Callback->>DB: Atomically set matching Payment done=true
+    Callback-->>Supporter: Redirect to /username?paymentdone=true
+    UI->>DB: Fetch completed payments again
+    UI-->>Supporter: Show thank-you toast and updated total
+```
+
+### Amount handling
+
+Razorpay expects the smallest currency unit. The browser multiplies a rupee value by `100`, and `initiate` sends that paise amount to Razorpay. The stored `Payment.amount` divides it by `100`, so MongoDB stores the display value in rupees.
+
+Example:
+
+```text
+supporter enters ₹50 -> browser sends 5000 paise -> Razorpay order is 5000 -> MongoDB stores 50
+```
+
+For financial software, storing an integer number of paise is safer than storing rupees because integer arithmetic avoids rounding ambiguity.
+
+### Why create a pending record first?
+
+The pending row connects the locally known donation details to Razorpay's order ID. The callback can later locate that exact row using `oid` and mark it complete only after verification. Reads deliberately use `{ done: true }`, preventing unverified orders from appearing as money raised.
+
+### Production-safe completion rules
+
+A complete callback/webhook should:
+
+1. parse the Razorpay order ID, payment ID, and signature;
+2. load the pending payment and the correct creator credentials;
+3. verify the HMAC signature with the server-side secret using a timing-safe comparison;
+4. confirm the amount, currency, order ID, and captured/authorized state;
+5. update by unique order/payment ID using an idempotent operation;
+6. never trust a `paymentdone=true` query parameter as proof of payment; and
+7. log failures without logging secrets or sensitive payment data.
+
+## 6. Payment state machine
+
+```mermaid
+stateDiagram-v2
+    [*] --> OrderRequested: supporter clicks Pay
+    OrderRequested --> Pending: Razorpay order created and Payment inserted
+    OrderRequested --> FailedToStart: order API or database write fails
+    Pending --> CancelledOrExpired: supporter cancels or order expires
+    Pending --> Verified: valid callback or webhook signature
+    Pending --> Rejected: invalid signature or mismatched details
+    Verified --> Displayed: fetchpayments includes done=true
+    Displayed --> Displayed: duplicate callback is handled idempotently
+```
+
+The current schema has only a Boolean `done`, so `CancelledOrExpired`, `Rejected`, and error reasons are conceptual states. A production schema would normally use a status enum such as `created`, `authorized`, `captured`, `failed`, and `refunded`, plus provider payment IDs and timestamps.
+
+=== FILE: ./docs/01-high-level-system-diagram.md ===
+# High-level system diagram
+
+> **Historical architecture:** this document describes the original Razorpay prototype. The current no-real-money implementation is documented in [05-current-demo-architecture.md](./05-current-demo-architecture.md).
+
+## Diagram
+
+```mermaid
+flowchart LR
+    Creator[Creator] -->|sign in and configure page| Web[GetFunds Next.js application]
+    Supporter[Supporter] -->|visit creator page and donate| Web
+
+    Web -->|OAuth authorization| GitHub[GitHub OAuth]
+    GitHub -->|identity and authorization response| Web
+
+    Web <-->|users and payments| Mongo[(MongoDB)]
+    Web -->|create order with creator credentials| Razorpay[Razorpay APIs]
+    Supporter <-->|hosted checkout| Razorpay
+
+    Razorpay -.->|payment callback expected by UI| Missing[Expected /api/razorpay handler]
+    Missing -.->|verify and set done true| Mongo
+
+    classDef missing fill:#fff3cd,stroke:#d39e00,color:#111;
+    class Missing missing;
+```
+
+The solid arrows show behavior represented in the repository. The dashed arrows show the intended payment-completion path whose callback route is currently missing.
+
+## What is inside the system boundary?
+
+GetFunds is a monolithic full-stack Next.js application. The same deployable application contains:
+
+- public pages and React client components;
+- server-rendered route logic;
+- NextAuth.js authentication endpoints and session callbacks;
+- server actions for creator and payment operations;
+- Mongoose models and MongoDB access; and
+- server-side Razorpay order creation.
+
+This is a useful architecture for a small product because the UI and backend share one repository, deployment, language, and domain model. It is not a pure browser-only app: secrets and database operations run on the server side.
+
+## Actors
+
+### Creator
+
+A creator signs in with GitHub, receives a GetFunds user record, and edits a profile in the dashboard. The profile stores a username, public images, and Razorpay credentials. The username becomes the public route, for example `/alice`.
+
+### Supporter
+
+A supporter does not need to authenticate in the current implementation. They open a creator's public page, see the ten largest completed contributions, enter a name/message/amount, and launch Razorpay Checkout.
+
+## External systems
+
+### GitHub OAuth
+
+GitHub proves the creator's identity. NextAuth.js handles the OAuth endpoints, provider redirects, and session cookie/JWT mechanics. On a successful sign-in, the application tries to find or create a local MongoDB `User` record.
+
+### MongoDB
+
+MongoDB is the system of record for:
+
+- creator identity and page configuration in the `users` collection; and
+- contribution/order state in the `payments` collection.
+
+Mongoose supplies schemas and query methods. The application connects using `MONGO_URI`.
+
+### Razorpay
+
+Razorpay creates and processes INR payment orders. The server action uses the target creator's Razorpay key ID and secret to create the order; the browser then opens Razorpay Checkout using the returned order ID.
+
+## Core business capability
+
+Conceptually, the application maps many creators to many fundraising pages:
+
+```text
+one User record -> one username -> one public fundraising page -> many Payment records
+```
+
+This lets several creators receive contributions independently. It does **not** currently model multiple named campaigns, goals, deadlines, or rewards for one creator. If an interviewer asks about “concurrent campaigns,” explain that the current version supports concurrent creator fundraising pages; a dedicated `Campaign` entity would be the next step for multiple campaigns per creator.
+
+## High-level request paths
+
+| Capability | Entry point | Server-side work | Stored result |
+|---|---|---|---|
+| GitHub login | `/login` | NextAuth exchanges OAuth data and runs callbacks | A `User` may be created; a session is issued |
+| Profile setup | `/dashboard` | `fetchuser` and `updateProfile` server actions | `User` fields are updated |
+| Public page | `/{username}` | Server component checks that the user exists; client fetches user/payments | No write |
+| Start donation | Pay button | `initiate` creates a Razorpay order and pending `Payment` | `Payment.done` starts as `false` |
+| Complete donation | Razorpay callback | Expected: verify signature and update the matching order | Not implemented in this repository |
+
+## Trust boundaries
+
+Three boundaries matter in an interview:
+
+1. **Browser to Next.js server**: browser input is untrusted and must be validated and authorized.
+2. **Next.js to MongoDB**: only server code should hold `MONGO_URI` and perform database writes.
+3. **Next.js/Razorpay boundary**: order creation and payment verification require server-held secrets and cryptographic signature verification.
+
+The current project correctly creates Razorpay orders on the server, but `fetchuser` also serializes the full user record—including `razorpaysecret`—to public client code. This must be removed in a production version by returning a safe public projection and keeping secrets server-only.
+
+## Source-code map
+
+| Area | Primary file |
+|---|---|
+| Root layout and global providers | `app/layout.js` |
+| Dynamic creator route and metadata | `app/[username]/page.js` |
+| Public contribution UI | `components/PaymentPage.js` |
+| Creator settings UI | `components/Dashboard.js` |
+| Authentication | `app/api/auth/[...nextauth]/route.js` |
+| Server actions | `actions/useractions.js` |
+| MongoDB connection | `db/connectDB.js` |
+| User model | `models/User.js` |
+| Payment model | `models/Payment.js` |
+
+=== FILE: ./README.md ===
+# GetFunds Test-Mode Crowdfunding Portfolio
+
+GetFunds is a full-stack portfolio project built with Next.js 15, React 19, NextAuth, MongoDB, Mongoose, Tailwind CSS, Razorpay Standard Checkout, and MongoDB GridFS.
+
+Razorpay is deliberately restricted to **Test Mode**. The application shows Razorpay's real Checkout UI and mock bank success/failure experience, but test keys cannot move real money. The server rejects any key ID that does not start with `rzp_test_`.
+
+## Interview-friendly features
+
+- GitHub OAuth with collision-safe local user provisioning.
+- Server-rendered dashboard protection and session-authorized mutations.
+- Razorpay test orders created through a server-only REST API call.
+- HMAC-SHA256 payment-signature verification with timing-safe comparison.
+- Remote payment amount, currency, order, and status confirmation before completion.
+- Idempotent pending-to-completed payment records.
+- Editable per-creator funding targets and live progress visualization.
+- Global creator search with debounced prefix and similar-name suggestions.
+- Public creator pages where visitors can make verified test contributions.
+- Creator-owned project folders with MongoDB GridFS file storage.
+- Authenticated project upload/delete and safe public file delivery.
+- MongoDB aggregation for totals, contribution count, unique supporters, averages, rankings, and recent activity.
+
+## Local setup
+
+1. Use Node 20:
+
+   ```bash
+   nvm use
+   ```
+
+2. Copy `.env.example` to `.env.local` and replace every placeholder.
+
+3. Create a GitHub OAuth App with:
+
+   ```text
+   Homepage URL: http://localhost:3000
+   Callback URL: http://localhost:3000/api/auth/callback/github
+   ```
+
+4. In the Razorpay Dashboard, switch to **Test Mode**, generate Test API Keys, and set:
+
+   ```env
+   RAZORPAY_KEY_ID=rzp_test_...
+   RAZORPAY_KEY_SECRET=...
+   ```
+
+   Never use `rzp_live_` keys in this project. Never prefix the secret with `NEXT_PUBLIC_`.
+
+5. Start MongoDB locally or supply a MongoDB Atlas connection string.
+
+6. Install and run:
+
+   ```bash
+   npm install
+   npm run dev -- --turbopack
+   ```
+
+7. Open `http://localhost:3000`.
+
+## Razorpay test payment
+
+1. Search for or open a creator profile.
+2. Enter a supporter name, message, and test amount.
+3. Open Razorpay Test Checkout.
+4. In the UPI test flow, use `success@razorpay` to simulate success or `failure@razorpay` to simulate failure.
+5. The contribution appears only after the server verifies the signature and remote payment data.
+
+## Project-folder limits
+
+- Up to 5 files per project folder.
+- Up to 5 MB per file.
+- Up to 15 MB total per folder.
+- Common code, document, image, archive, and text formats are accepted.
+- Potentially executable formats such as HTML are forced to download instead of executing in the GetFunds origin.
+
+## Commands
+
+```bash
+npm run dev -- --turbopack
+npm run lint
+npm run build
+npm run start
+```
+
+The detailed current architecture is in [`docs/05-current-demo-architecture.md`](docs/05-current-demo-architecture.md). The full learning guide is at [`../GETFUNDS_COMPLETE_PROJECT_GUIDE.md`](../GETFUNDS_COMPLETE_PROJECT_GUIDE.md).
+
+=== FILE: ./components/Navbar.js ===
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { signOut, useSession } from "next-auth/react";
+import CreatorSearch from "@/components/CreatorSearch";
+
+const Navbar = () => {
+  const { data: session, status } = useSession();
+  const [showDropdown, setShowDropdown] = useState(false);
+  const username = session?.user?.username;
+
+  return (
+    <nav className="relative z-50 flex min-h-16 items-center gap-2 border-b border-slate-800 bg-slate-950/95 px-3 text-white shadow-xl backdrop-blur md:gap-4 md:px-4">
+      <Link
+        className="flex shrink-0 items-center gap-2 font-bold"
+        href="/"
+        aria-label="GetFunds home"
+      >
+        <Image
+          src="/tea.gif"
+          width={42}
+          height={42}
+          alt=""
+          unoptimized
+        />
+        <span className="hidden sm:inline">GetFunds Demo</span>
+      </Link>
+
+      <CreatorSearch />
+
+      <div className="relative shrink-0">
+        {status === "loading" && (
+          <span className="text-sm text-slate-400">Loading session...</span>
+        )}
+
+        {status === "unauthenticated" && (
+          <Link
+            href="/login"
+            className="rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 px-5 py-2.5 text-sm font-semibold hover:from-purple-500 hover:to-blue-500"
+          >
+            Creator login
+          </Link>
+        )}
+
+        {status === "authenticated" && (
+          <>
+            <button
+              type="button"
+              aria-expanded={showDropdown}
+              aria-controls="account-menu"
+              onClick={() => setShowDropdown((visible) => !visible)}
+              onBlur={() => {
+                window.setTimeout(() => setShowDropdown(false), 150);
+              }}
+              className="inline-flex items-center gap-2 rounded-lg bg-blue-700 px-4 py-2.5 text-sm font-semibold hover:bg-blue-600"
+            >
+              Account
+              <svg
+                aria-hidden="true"
+                className="size-3"
+                viewBox="0 0 10 6"
+                fill="none"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="m1 1 4 4 4-4"
+                />
+              </svg>
+            </button>
+
+            <div
+              id="account-menu"
+              className={`absolute right-0 top-12 w-48 overflow-hidden rounded-lg border border-slate-700 bg-slate-900 shadow-2xl ${
+                showDropdown ? "" : "hidden"
+              }`}
+            >
+              <Link
+                href="/dashboard"
+                className="block px-4 py-3 text-sm hover:bg-slate-800"
+              >
+                Creator analytics
+              </Link>
+              {username && (
+                <Link
+                  href={`/${username}`}
+                  className="block px-4 py-3 text-sm hover:bg-slate-800"
+                >
+                  Public page
+                </Link>
+              )}
+              <button
+                type="button"
+                onClick={() => signOut({ callbackUrl: "/" })}
+                className="block w-full border-t border-slate-800 px-4 py-3 text-left text-sm text-red-200 hover:bg-slate-800"
+              >
+                Sign out
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;
+
+=== FILE: ./components/CreatorSearch.js ===
+"use client";
+
+import { useEffect, useId, useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { searchCreators } from "@/actions/useractions";
+
+const CreatorSearch = () => {
+  const router = useRouter();
+  const listboxId = useId();
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const trimmedQuery = query.trim();
+
+    if (trimmedQuery.length < 2) {
+      setResults([]);
+      setLoading(false);
+      return undefined;
+    }
+
+    let active = true;
+    setLoading(true);
+
+    const timer = window.setTimeout(async () => {
+      try {
+        const suggestions = await searchCreators(trimmedQuery);
+
+        if (active) {
+          setResults(suggestions);
+          setOpen(true);
+        }
+      } catch {
+        if (active) {
+          setResults([]);
+        }
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
+      }
+    }, 250);
+
+    return () => {
+      active = false;
+      window.clearTimeout(timer);
+    };
+  }, [query]);
+
+  const visitCreator = (username) => {
+    setOpen(false);
+    setQuery("");
+    router.push(`/${username}`);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (results[0]) {
+      visitCreator(results[0].username);
+    }
+  };
+
+  return (
+    <div className="relative mx-2 w-full max-w-xl">
+      <form onSubmit={handleSubmit} role="search">
+        <label className="sr-only" htmlFor="creator-search">
+          Search creators
+        </label>
+        <div className="relative">
+          <input
+            id="creator-search"
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            onFocus={() => query.trim().length >= 2 && setOpen(true)}
+            onBlur={() => window.setTimeout(() => setOpen(false), 150)}
+            placeholder="Search creators..."
+            autoComplete="off"
+            role="combobox"
+            aria-autocomplete="list"
+            aria-controls={listboxId}
+            aria-expanded={open}
+            aria-haspopup="listbox"
+            className="w-full rounded-lg border border-slate-700 bg-slate-900 py-2 pl-4 pr-10 text-sm text-white outline-none placeholder:text-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
+          />
+          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">
+            {loading ? "…" : "⌕"}
+          </span>
+        </div>
+      </form>
+
+      {open && query.trim().length >= 2 && (
+        <div
+          id={listboxId}
+          role="listbox"
+          className="absolute left-0 right-0 top-12 overflow-hidden rounded-xl border border-slate-700 bg-slate-900 shadow-2xl"
+        >
+          {loading && results.length === 0 ? (
+            <p className="p-4 text-sm text-slate-400">Finding similar creators...</p>
+          ) : results.length === 0 ? (
+            <p className="p-4 text-sm text-slate-400">
+              No creator names match “{query.trim()}”.
+            </p>
+          ) : (
+            <ul>
+              {results.map((creator) => (
+                <li key={creator.id} role="option" aria-selected="false">
+                  <button
+                    type="button"
+                    onMouseDown={(event) => event.preventDefault()}
+                    onClick={() => visitCreator(creator.username)}
+                    className="flex w-full items-center gap-3 border-b border-slate-800 px-4 py-3 text-left last:border-0 hover:bg-slate-800"
+                  >
+                    <Image
+                      src={creator.profilepic || "/avatar.gif"}
+                      alt=""
+                      width={38}
+                      height={38}
+                      unoptimized
+                      className="size-10 rounded-full object-cover"
+                    />
+                    <span className="min-w-0">
+                      <span className="block truncate text-sm font-semibold">
+                        {creator.name}
+                      </span>
+                      <span className="block truncate text-xs text-slate-400">
+                        @{creator.username}
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default CreatorSearch;
+
+=== FILE: ./components/PaymentPage.js ===
+"use client";
+
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import { getPublicCreatorData } from "@/actions/useractions";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const currency = new Intl.NumberFormat("en-IN", {
+  style: "currency",
+  currency: "INR",
+  maximumFractionDigits: 0,
+});
+
+const emptyForm = {
+  name: "",
+  message: "",
+  amount: "",
+};
+
+const formatFileSize = (bytes) => {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+};
+
+const RAZORPAY_SCRIPT_ID = "razorpay-checkout-script";
+let razorpayLoaderPromise;
+
+const loadRazorpayCheckout = () => {
+  if (typeof window === "undefined") {
+    return Promise.reject(new Error("Razorpay Checkout requires a browser."));
+  }
+
+  if (window.Razorpay) {
+    return Promise.resolve();
+  }
+
+  if (razorpayLoaderPromise) {
+    return razorpayLoaderPromise;
+  }
+
+  razorpayLoaderPromise = new Promise((resolve, reject) => {
+    let script = document.getElementById(RAZORPAY_SCRIPT_ID);
+    const shouldAppendScript = !script;
+    let timeout;
+
+    const cleanup = () => {
+      window.clearTimeout(timeout);
+      script?.removeEventListener("load", handleLoad);
+      script?.removeEventListener("error", handleError);
+    };
+
+    const handleLoad = () => {
+      cleanup();
+
+      if (window.Razorpay) {
+        resolve();
+        return;
+      }
+
+      razorpayLoaderPromise = undefined;
+      reject(new Error("Razorpay loaded without exposing Checkout. Please retry."));
+    };
+
+    const handleError = () => {
+      cleanup();
+      script?.remove();
+      razorpayLoaderPromise = undefined;
+      reject(
+        new Error(
+          "Razorpay Checkout was blocked. Check your internet connection or ad blocker, then retry.",
+        ),
+      );
+    };
+
+    if (!script) {
+      script = document.createElement("script");
+      script.id = RAZORPAY_SCRIPT_ID;
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.async = true;
+    }
+
+    script.addEventListener("load", handleLoad, { once: true });
+    script.addEventListener("error", handleError, { once: true });
+
+    timeout = window.setTimeout(() => {
+      cleanup();
+      script?.remove();
+      razorpayLoaderPromise = undefined;
+      reject(
+        new Error(
+          "Razorpay Checkout timed out. Check your connection or disable blocking extensions, then retry.",
+        ),
+      );
+    }, 15000);
+
+    if (window.Razorpay) {
+      handleLoad();
+      return;
+    }
+
+    if (shouldAppendScript) {
+      document.head.appendChild(script);
+    }
+  });
+
+  return razorpayLoaderPromise;
+};
+
+const PaymentPage = ({ username, initialData }) => {
+  const [creatorData, setCreatorData] = useState(initialData);
+  const [form, setForm] = useState(emptyForm);
+  const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState("");
+  const [checkoutReady, setCheckoutReady] = useState(false);
+
+  const {
+    profile,
+    projects,
+    stats,
+    testCheckoutEnabled,
+    topContributions,
+  } = creatorData;
+  const fundingGoal = profile.fundingGoal || 10000;
+  const progress = Math.min(
+    100,
+    Math.round((stats.totalAmount / fundingGoal) * 100),
+  );
+
+  useEffect(() => {
+    if (!testCheckoutEnabled) {
+      return undefined;
+    }
+
+    let active = true;
+
+    loadRazorpayCheckout()
+      .then(() => {
+        if (active) setCheckoutReady(true);
+      })
+      .catch((error) => {
+        if (active) setFormError(error.message);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [testCheckoutEnabled]);
+
+  const handleChange = (event) => {
+    setForm((current) => ({
+      ...current,
+      [event.target.name]: event.target.value,
+    }));
+  };
+
+  const refreshCreatorData = async () => {
+    const freshData = await getPublicCreatorData(username);
+
+    if (freshData) {
+      setCreatorData(freshData);
+    }
+  };
+
+  const submitContribution = async (event) => {
+    event.preventDefault();
+    setFormError("");
+    setSubmitting(true);
+
+    try {
+      await loadRazorpayCheckout();
+      setCheckoutReady(true);
+
+      const orderResponse = await fetch("/api/razorpay/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username,
+          name: form.name,
+          message: form.message,
+          amount: Number(form.amount),
+        }),
+      });
+      const orderResult = await orderResponse.json();
+
+      if (!orderResponse.ok || !orderResult.ok) {
+        setFormError(orderResult.error || "Could not create a Razorpay test order.");
+        setSubmitting(false);
+        return;
+      }
+
+      const checkout = new window.Razorpay({
+        key: orderResult.checkout.keyId,
+        amount: orderResult.checkout.amount,
+        currency: orderResult.checkout.currency,
+        name: "GetFunds Test Mode",
+        description: `Test contribution to @${username}`,
+        order_id: orderResult.checkout.orderId,
+        prefill: {
+          name: orderResult.checkout.supporterName,
+        },
+        notes: {
+          creator: username,
+        },
+        theme: {
+          color: "#7c3aed",
+        },
+        modal: {
+          ondismiss: () => setSubmitting(false),
+        },
+        handler: async (paymentResult) => {
+          try {
+            const verificationResponse = await fetch("/api/razorpay/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(paymentResult),
+            });
+            const verification = await verificationResponse.json();
+
+            if (!verificationResponse.ok || !verification.ok) {
+              setFormError(
+                verification.error || "The Razorpay test payment could not be verified.",
+              );
+              return;
+            }
+
+            setForm(emptyForm);
+            await refreshCreatorData();
+            toast.success(verification.message);
+          } catch {
+            setFormError("Payment returned successfully, but server verification failed.");
+          } finally {
+            setSubmitting(false);
+          }
+        },
+      });
+
+      checkout.on("payment.failed", (response) => {
+        setFormError(
+          response?.error?.description || "The Razorpay test payment was marked as failed.",
+        );
+        setSubmitting(false);
+      });
+
+      checkout.open();
+    } catch (error) {
+      setFormError(error.message || "Could not open Razorpay Test Checkout.");
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <>
+      <ToastContainer
+        position="top-right"
+        autoClose={4000}
+        theme="dark"
+      />
+
+      <section className="relative">
+        <div className="relative h-52 overflow-hidden bg-gradient-to-r from-purple-950 via-slate-900 to-blue-950 md:h-[350px]">
+          {profile.coverpic ? (
+            <Image
+              className="object-cover opacity-80"
+              src={profile.coverpic}
+              alt=""
+              fill
+              sizes="100vw"
+              unoptimized
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center text-lg text-slate-300">
+              Creator cover
+            </div>
+          )}
+        </div>
+
+        <div className="absolute -bottom-16 left-1/2 size-32 -translate-x-1/2 overflow-hidden rounded-full border-4 border-slate-950 bg-slate-800 md:size-36">
+          <Image
+            className="object-cover"
+            src={profile.profilepic || "/avatar.gif"}
+            alt={`${profile.name}'s profile`}
+            fill
+            sizes="(min-width: 768px) 144px, 128px"
+            unoptimized
+          />
+        </div>
+      </section>
+
+      <main className="mx-auto mb-24 mt-24 w-[92%] max-w-6xl">
+        <header className="text-center">
+          <span className="inline-flex rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-amber-200">
+            Razorpay Test Mode · no real money
+          </span>
+          <h1 className="mt-4 text-3xl font-bold">{profile.name}</h1>
+          <p className="mt-1 text-slate-400">@{username}</p>
+          <p className="mt-3 text-slate-300">
+            Support this creator through Razorpay&apos;s official mock checkout.
+          </p>
+        </header>
+
+        <section
+          className="mx-auto mt-8 max-w-3xl rounded-2xl border border-slate-700 bg-slate-900/90 p-6"
+          aria-labelledby="funding-progress"
+        >
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <p id="funding-progress" className="text-sm text-slate-400">
+                Test funding progress
+              </p>
+              <p className="mt-1 text-2xl font-bold">
+                {currency.format(stats.totalAmount)}
+              </p>
+            </div>
+            <p className="text-right text-sm text-slate-300">
+              {progress}% of {currency.format(fundingGoal)}
+            </p>
+          </div>
+          <div
+            className="mt-4 h-3 overflow-hidden rounded-full bg-slate-700"
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={progress}
+          >
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-purple-500 to-blue-500 transition-all"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        </section>
+
+        <section className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
+          {[
+            ["Total raised", currency.format(stats.totalAmount)],
+            ["Contributions", stats.contributionCount],
+            ["Supporters", stats.supporterCount],
+            ["Average", currency.format(stats.averageAmount)],
+          ].map(([label, value]) => (
+            <article
+              key={label}
+              className="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center"
+            >
+              <p className="text-xs uppercase tracking-wide text-slate-400">
+                {label}
+              </p>
+              <p className="mt-2 text-xl font-bold">{value}</p>
+            </article>
+          ))}
+        </section>
+
+        <section className="mt-8 rounded-2xl border border-slate-800 bg-slate-900 p-5 md:p-8">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h2 className="text-2xl font-bold">Project folders</h2>
+              <p className="mt-1 text-sm text-slate-400">
+                Public files uploaded by this creator and stored in MongoDB GridFS.
+              </p>
+            </div>
+            <span className="text-sm text-slate-500">
+              {projects.length} {projects.length === 1 ? "folder" : "folders"}
+            </span>
+          </div>
+
+          {projects.length === 0 ? (
+            <div className="mt-6 rounded-xl border border-dashed border-slate-700 p-7 text-center text-slate-400">
+              This creator has not published a project folder yet.
+            </div>
+          ) : (
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              {projects.map((project) => (
+                <article
+                  key={project.id}
+                  className="rounded-xl border border-slate-700 bg-slate-800/60 p-5"
+                >
+                  <h3 className="text-lg font-bold">📁 {project.title}</h3>
+                  {project.description && (
+                    <p className="mt-2 text-sm text-slate-300">
+                      {project.description}
+                    </p>
+                  )}
+                  <ul className="mt-4 space-y-2">
+                    {project.files.map((file) => (
+                      <li key={file.id}>
+                        <a
+                          href={file.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex items-center justify-between gap-3 rounded-lg bg-slate-900 px-3 py-2 text-sm text-blue-200 hover:bg-slate-950"
+                        >
+                          <span className="truncate">{file.filename}</span>
+                          <span className="shrink-0 text-xs text-slate-500">
+                            {formatFileSize(file.size)}
+                          </span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
+
+        <div className="mt-8 grid gap-6 lg:grid-cols-2">
+          <section className="rounded-2xl border border-slate-800 bg-slate-900 p-5 md:p-8">
+            <h2 className="text-2xl font-bold">Top test supporters</h2>
+            <p className="mt-1 text-sm text-slate-400">
+              Ranked by verified test contribution amount.
+            </p>
+
+            {topContributions.length === 0 ? (
+              <div className="mt-8 rounded-xl border border-dashed border-slate-700 p-8 text-center text-slate-400">
+                No verified test contributions yet. Be the first supporter.
+              </div>
+            ) : (
+              <ol className="mt-6 space-y-4">
+                {topContributions.map((contribution, index) => (
+                  <li
+                    key={contribution.id}
+                    className="flex gap-3 rounded-xl bg-slate-800/70 p-4"
+                  >
+                    <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-purple-600 font-bold">
+                      {index + 1}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-start justify-between gap-3">
+                        <p className="font-semibold">{contribution.name}</p>
+                        <p className="shrink-0 font-bold text-emerald-300">
+                          {currency.format(contribution.amount)}
+                        </p>
+                      </div>
+                      {contribution.message && (
+                        <p className="mt-1 break-words text-sm text-slate-300">
+                          “{contribution.message}”
+                        </p>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </section>
+
+          <section className="rounded-2xl border border-purple-500/30 bg-slate-900 p-5 md:p-8">
+            <h2 className="text-2xl font-bold">Open Razorpay Test Checkout</h2>
+            <p className="mt-1 text-sm text-amber-200">
+              Razorpay displays a mock payment screen. Test keys cannot move real money.
+            </p>
+
+            {!testCheckoutEnabled && (
+              <p className="mt-4 rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-amber-100">
+                Add server-only RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET test keys to .env.local, then restart the server.
+              </p>
+            )}
+
+            <form className="mt-6 space-y-4" onSubmit={submitContribution}>
+              <div>
+                <label className="mb-1 block text-sm font-medium" htmlFor="name">
+                  Supporter name
+                </label>
+                <input
+                  id="name"
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  minLength={2}
+                  maxLength={60}
+                  required
+                  className="w-full rounded-lg border border-slate-700 bg-slate-800 p-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
+                  placeholder="Enter a demo supporter name"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium" htmlFor="message">
+                  Message
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={form.message}
+                  onChange={handleChange}
+                  maxLength={240}
+                  rows={3}
+                  className="w-full resize-none rounded-lg border border-slate-700 bg-slate-800 p-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
+                  placeholder="Write an optional message"
+                />
+                <p className="mt-1 text-right text-xs text-slate-500">
+                  {form.message.length}/240
+                </p>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium" htmlFor="amount">
+                  Test amount in rupees
+                </label>
+                <input
+                  id="amount"
+                  name="amount"
+                  type="number"
+                  value={form.amount}
+                  onChange={handleChange}
+                  min={10}
+                  max={100000}
+                  step={1}
+                  required
+                  className="w-full rounded-lg border border-slate-700 bg-slate-800 p-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
+                  placeholder="100"
+                />
+              </div>
+
+              <div className="grid grid-cols-3 gap-2">
+                {[100, 500, 1000].map((amount) => (
+                  <button
+                    key={amount}
+                    type="button"
+                    onClick={() =>
+                      setForm((current) => ({
+                        ...current,
+                        amount: String(amount),
+                      }))
+                    }
+                    className="rounded-lg bg-slate-800 p-2 text-sm hover:bg-slate-700"
+                  >
+                    {currency.format(amount)}
+                  </button>
+                ))}
+              </div>
+
+              {formError && (
+                <p
+                  className="rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-200"
+                  role="alert"
+                >
+                  {formError}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                disabled={submitting || !testCheckoutEnabled}
+                className="w-full rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 px-5 py-3 font-semibold hover:from-purple-500 hover:to-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {submitting
+                  ? "Opening secure test checkout..."
+                  : !testCheckoutEnabled
+                    ? "Configure Razorpay test keys"
+                    : !checkoutReady
+                      ? "Load Razorpay Test Checkout"
+                      : "Pay with Razorpay Test Mode"}
+              </button>
+
+              {testCheckoutEnabled && (
+                <p className="text-center text-xs text-slate-500">
+                  In Razorpay&apos;s UPI test flow, use success@razorpay or failure@razorpay.
+                </p>
+              )}
+            </form>
+          </section>
+        </div>
+      </main>
+    </>
+  );
+};
+
+export default PaymentPage;
+
+=== FILE: ./components/SessionWrapper.js ===
+"use client";
+import {SessionProvider} from "next-auth/react"
+
+export default function SessionWrapper({ children }) {
+  return (
+    <SessionProvider>
+      {children}
+    </SessionProvider>
+  )
+}
+=== FILE: ./components/Dashboard.js ===
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
+import {
+  getDashboardData,
+  updateProfile,
+} from "@/actions/useractions";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const currency = new Intl.NumberFormat("en-IN", {
+  style: "currency",
+  currency: "INR",
+  maximumFractionDigits: 0,
+});
+
+const formatFileSize = (bytes) => {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+};
+
+const Dashboard = () => {
+  const { update: updateSession } = useSession();
+  const [dashboard, setDashboard] = useState(null);
+  const [form, setForm] = useState({
+    email: "",
+    name: "",
+    username: "",
+    profilepic: "",
+    coverpic: "",
+    fundingGoal: "10000",
+  });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [uploadingProject, setUploadingProject] = useState(false);
+  const [deletingProjectId, setDeletingProjectId] = useState("");
+  const [error, setError] = useState("");
+
+  const loadDashboard = useCallback(async () => {
+    setError("");
+
+    const result = await getDashboardData();
+
+    if (!result.ok) {
+      setError(result.error);
+      setLoading(false);
+      return;
+    }
+
+    setDashboard(result);
+    setForm({
+      ...result.profile,
+      fundingGoal: String(result.profile.fundingGoal),
+    });
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    loadDashboard();
+  }, [loadDashboard]);
+
+  const handleChange = (event) => {
+    setForm((current) => ({
+      ...current,
+      [event.target.name]: event.target.value,
+    }));
+  };
+
+  const handleSubmit = async (formData) => {
+    setSaving(true);
+
+    try {
+      const result = await updateProfile(formData);
+
+      if (!result.ok) {
+        toast.error(result.error);
+        return;
+      }
+
+      await updateSession();
+      await loadDashboard();
+      toast.success(result.message);
+    } catch {
+      toast.error("The profile could not be updated.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleProjectUpload = async (event) => {
+    event.preventDefault();
+    const formElement = event.currentTarget;
+    const formData = new FormData(formElement);
+    setUploadingProject(true);
+
+    try {
+      const response = await fetch("/api/projects", {
+        method: "POST",
+        body: formData,
+      });
+      const result = await response.json();
+
+      if (!response.ok || !result.ok) {
+        toast.error(result.error || "Could not upload the project folder.");
+        return;
+      }
+
+      formElement.reset();
+      await loadDashboard();
+      toast.success(result.message);
+    } catch {
+      toast.error("Could not upload the project folder.");
+    } finally {
+      setUploadingProject(false);
+    }
+  };
+
+  const deleteProject = async (project) => {
+    if (!window.confirm(`Delete the project folder “${project.title}” and all its files?`)) {
+      return;
+    }
+
+    setDeletingProjectId(project.id);
+
+    try {
+      const response = await fetch(`/api/projects/${project.id}`, {
+        method: "DELETE",
+      });
+      const result = await response.json();
+
+      if (!response.ok || !result.ok) {
+        toast.error(result.error || "Could not delete the project folder.");
+        return;
+      }
+
+      await loadDashboard();
+      toast.success(result.message);
+    } catch {
+      toast.error("Could not delete the project folder.");
+    } finally {
+      setDeletingProjectId("");
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="mx-auto max-w-6xl px-6 py-20 text-center text-slate-300">
+        Loading creator analytics...
+      </div>
+    );
+  }
+
+  if (error || !dashboard) {
+    return (
+      <div className="mx-auto max-w-2xl px-6 py-20">
+        <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-6 text-red-200">
+          <h1 className="text-xl font-bold">Dashboard unavailable</h1>
+          <p className="mt-2">{error || "Could not load your creator profile."}</p>
+        </div>
+      </div>
+    );
+  }
+
+  const topSupporter = dashboard.topContributions[0];
+
+  return (
+    <>
+      <ToastContainer position="top-right" autoClose={4000} theme="dark" />
+
+      <main className="mx-auto max-w-6xl px-4 py-10 md:px-6">
+        <header className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <span className="inline-flex rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-amber-200">
+              Interview demo · Razorpay Test Mode
+            </span>
+            <h1 className="mt-3 text-3xl font-bold">Creator analytics</h1>
+            <p className="mt-1 text-slate-400">
+              Manage your public page, project folders, target, and verified test funding.
+            </p>
+          </div>
+          <Link
+            href={`/${dashboard.profile.username}`}
+            className="rounded-lg border border-blue-400 px-4 py-2 text-center text-blue-200 hover:bg-blue-500/10"
+          >
+            View public page
+          </Link>
+        </header>
+
+        <section className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
+          {[
+            ["Verified test funding", currency.format(dashboard.stats.totalAmount)],
+            ["Contributions", dashboard.stats.contributionCount],
+            ["Unique supporters", dashboard.stats.supporterCount],
+            ["Average amount", currency.format(dashboard.stats.averageAmount)],
+          ].map(([label, value]) => (
+            <article
+              key={label}
+              className="rounded-2xl border border-slate-800 bg-slate-900 p-5"
+            >
+              <p className="text-xs uppercase tracking-wide text-slate-400">
+                {label}
+              </p>
+              <p className="mt-2 text-2xl font-bold">{value}</p>
+            </article>
+          ))}
+        </section>
+
+        <section className="mt-6 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5 md:p-8">
+            <h2 className="text-2xl font-bold">Profile settings</h2>
+            <p className="mt-1 text-sm text-slate-400">
+              Changes are validated and authorized on the server.
+            </p>
+
+            <form className="mt-6 space-y-4" action={handleSubmit}>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <label className="mb-1 block text-sm font-medium" htmlFor="name">
+                    Display name
+                  </label>
+                  <input
+                    id="name"
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
+                    maxLength={80}
+                    className="w-full rounded-lg border border-slate-700 bg-slate-800 p-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-sm font-medium" htmlFor="username">
+                    Username
+                  </label>
+                  <input
+                    id="username"
+                    name="username"
+                    value={form.username}
+                    onChange={handleChange}
+                    minLength={3}
+                    maxLength={30}
+                    pattern="[a-z0-9_]+"
+                    required
+                    className="w-full rounded-lg border border-slate-700 bg-slate-800 p-3 lowercase outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
+                  />
+                  <p className="mt-1 text-xs text-slate-500">
+                    Lowercase letters, numbers, and underscores only.
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium" htmlFor="email">
+                  GitHub email
+                </label>
+                <input
+                  id="email"
+                  value={form.email}
+                  readOnly
+                  className="w-full cursor-not-allowed rounded-lg border border-slate-800 bg-slate-950 p-3 text-slate-500"
+                />
+                <p className="mt-1 text-xs text-slate-500">
+                  Identity comes from GitHub and cannot be changed in this form.
+                </p>
+              </div>
+
+              <div>
+                <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
+                  <div className="flex flex-wrap items-end justify-between gap-2">
+                    <label className="block text-sm font-semibold text-emerald-100" htmlFor="fundingGoal">
+                      Public funding target
+                    </label>
+                    <span className="text-sm font-bold text-emerald-200">
+                      {currency.format(Number(form.fundingGoal) || 0)}
+                    </span>
+                  </div>
+                  <input
+                    id="fundingGoal"
+                    name="fundingGoal"
+                    type="number"
+                    value={form.fundingGoal}
+                    onChange={handleChange}
+                    min={100}
+                    max={10000000}
+                    step={100}
+                    required
+                    className="mt-2 w-full rounded-lg border border-emerald-500/30 bg-slate-900 p-3 outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30"
+                  />
+                  <p className="mt-2 text-xs text-emerald-100/70">
+                    This value controls the goal and progress bar shown on your public profile. It is not hardcoded.
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium" htmlFor="profilepic">
+                  Profile image URL
+                </label>
+                <input
+                  id="profilepic"
+                  name="profilepic"
+                  type="url"
+                  value={form.profilepic}
+                  onChange={handleChange}
+                  className="w-full rounded-lg border border-slate-700 bg-slate-800 p-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
+                  placeholder="https://example.com/profile.jpg"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium" htmlFor="coverpic">
+                  Cover image URL
+                </label>
+                <input
+                  id="coverpic"
+                  name="coverpic"
+                  type="url"
+                  value={form.coverpic}
+                  onChange={handleChange}
+                  className="w-full rounded-lg border border-slate-700 bg-slate-800 p-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
+                  placeholder="https://example.com/cover.jpg"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={saving}
+                className="w-full rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 px-5 py-3 font-semibold hover:from-purple-500 hover:to-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {saving ? "Saving..." : "Save profile"}
+              </button>
+            </form>
+          </div>
+
+          <aside className="space-y-6">
+            <section className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+              <h2 className="text-lg font-bold">Top supporter</h2>
+              {topSupporter ? (
+                <div className="mt-4 rounded-xl bg-slate-800 p-4">
+                  <div className="flex justify-between gap-3">
+                    <p className="font-semibold">{topSupporter.name}</p>
+                    <p className="font-bold text-emerald-300">
+                      {currency.format(topSupporter.amount)}
+                    </p>
+                  </div>
+                  {topSupporter.message && (
+                    <p className="mt-2 text-sm text-slate-300">
+                      “{topSupporter.message}”
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <p className="mt-3 text-sm text-slate-400">
+                  No verified test contributions yet.
+                </p>
+              )}
+            </section>
+
+            <section className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+              <h2 className="text-lg font-bold">Recent activity</h2>
+              {dashboard.recentContributions.length === 0 ? (
+                <p className="mt-3 text-sm text-slate-400">
+                  Verified Razorpay test contributions will appear here.
+                </p>
+              ) : (
+                <ul className="mt-4 space-y-3">
+                  {dashboard.recentContributions.map((contribution) => (
+                    <li
+                      key={contribution.id}
+                      className="flex items-center justify-between gap-3 border-b border-slate-800 pb-3 last:border-0"
+                    >
+                      <div className="min-w-0">
+                        <p className="truncate font-medium">{contribution.name}</p>
+                        <p className="text-xs text-slate-500">
+                          {contribution.createdAt
+                            ? new Date(contribution.createdAt).toLocaleDateString("en-IN")
+                            : "Demo record"}
+                        </p>
+                      </div>
+                      <p className="shrink-0 font-semibold text-emerald-300">
+                        {currency.format(contribution.amount)}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+          </aside>
+        </section>
+
+        <section className="mt-6 rounded-2xl border border-slate-800 bg-slate-900 p-5 md:p-8">
+          <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+            <div>
+              <h2 className="text-2xl font-bold">Project folders</h2>
+              <p className="mt-1 text-sm text-slate-400">
+                Upload portfolio files to MongoDB GridFS. Visitors can view or download them from your public profile.
+              </p>
+            </div>
+            <span className="text-sm text-slate-500">
+              Maximum 5 files per folder, 5 MB per file, 15 MB total
+            </span>
+          </div>
+
+          <form
+            className="mt-6 grid gap-4 rounded-xl border border-slate-700 bg-slate-800/50 p-5 lg:grid-cols-2"
+            onSubmit={handleProjectUpload}
+          >
+            <div>
+              <label className="mb-1 block text-sm font-medium" htmlFor="project-title">
+                Project title
+              </label>
+              <input
+                id="project-title"
+                name="title"
+                minLength={3}
+                maxLength={80}
+                required
+                className="w-full rounded-lg border border-slate-700 bg-slate-900 p-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
+                placeholder="Example: Expense Tracker"
+              />
+            </div>
+
+            <div>
+              <label className="mb-1 block text-sm font-medium" htmlFor="project-files">
+                Project files
+              </label>
+              <input
+                id="project-files"
+                name="files"
+                type="file"
+                multiple
+                required
+                accept=".c,.cpp,.css,.csv,.doc,.docx,.gif,.html,.java,.jpeg,.jpg,.js,.json,.jsx,.md,.pdf,.png,.ppt,.pptx,.py,.sh,.sql,.ts,.tsx,.txt,.webp,.xls,.xlsx,.xml,.yaml,.yml,.zip"
+                className="block w-full rounded-lg border border-slate-700 bg-slate-900 p-2.5 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-blue-600 file:px-3 file:py-1.5 file:text-white"
+              />
+            </div>
+
+            <div className="lg:col-span-2">
+              <label className="mb-1 block text-sm font-medium" htmlFor="project-description">
+                Description
+              </label>
+              <textarea
+                id="project-description"
+                name="description"
+                maxLength={500}
+                rows={3}
+                className="w-full resize-none rounded-lg border border-slate-700 bg-slate-900 p-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
+                placeholder="Explain what the project does, its technology, and your contribution."
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={uploadingProject}
+              className="rounded-lg bg-blue-600 px-5 py-3 font-semibold hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-60 lg:col-span-2"
+            >
+              {uploadingProject ? "Uploading folder..." : "Publish project folder"}
+            </button>
+          </form>
+
+          {dashboard.projects.length === 0 ? (
+            <div className="mt-6 rounded-xl border border-dashed border-slate-700 p-8 text-center text-slate-400">
+              No project folders published yet.
+            </div>
+          ) : (
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              {dashboard.projects.map((project) => (
+                <article
+                  key={project.id}
+                  className="rounded-xl border border-slate-700 bg-slate-800/50 p-5"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h3 className="font-bold">📁 {project.title}</h3>
+                      {project.description && (
+                        <p className="mt-1 text-sm text-slate-300">
+                          {project.description}
+                        </p>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => deleteProject(project)}
+                      disabled={deletingProjectId === project.id}
+                      className="shrink-0 rounded-md border border-red-500/40 px-2.5 py-1.5 text-xs text-red-200 hover:bg-red-500/10 disabled:opacity-50"
+                    >
+                      {deletingProjectId === project.id ? "Deleting..." : "Delete"}
+                    </button>
+                  </div>
+                  <ul className="mt-4 space-y-2">
+                    {project.files.map((file) => (
+                      <li key={file.id}>
+                        <a
+                          href={file.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex items-center justify-between gap-3 rounded-lg bg-slate-900 px-3 py-2 text-sm text-blue-200 hover:bg-slate-950"
+                        >
+                          <span className="truncate">{file.filename}</span>
+                          <span className="shrink-0 text-xs text-slate-500">
+                            {formatFileSize(file.size)}
+                          </span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
+      </main>
+    </>
+  );
+};
+
+export default Dashboard;
+
+=== FILE: ./components/Footer.js ===
+const Footer = () => {
+  return (
+    <footer className='flex min-h-16 items-center justify-center border-t border-slate-800 bg-slate-950 px-4 text-center text-sm text-slate-400'>
+        &copy; {new Date().getFullYear()} GetFunds Demo. Razorpay Test Mode only; no real money is processed.
+    </footer>
+  )
+}
+
+export default Footer
+
+=== FILE: ./package.json ===
+{
+  "name": "my-app",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=20 <23"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "mongoose": "^8.17.1",
+    "next": "15.4.6",
+    "next-auth": "^4.24.11",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-toastify": "^11.0.5"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "eslint": "^9",
+    "eslint-config-next": "15.4.6",
+    "tailwindcss": "^4"
+  }
+}
+
+=== FILE: ./actions/useractions.js ===
+"use server";
+
+import { revalidatePath } from "next/cache";
+import Payment from "@/models/Payment";
+import Project from "@/models/Project";
+import connectDb from "@/db/connectDB";
+import User from "@/models/User";
+import { requireCurrentUser } from "@/lib/current-user";
+
+const RESERVED_USERNAMES = new Set([
+  "about",
+  "api",
+  "dashboard",
+  "login",
+  "logout",
+  "support",
+]);
+
+const normalizeUsername = (value) =>
+  String(value || "").trim().toLowerCase();
+
+const validateUsername = (value) => {
+  const username = normalizeUsername(value);
+
+  if (!/^[a-z0-9_]{3,30}$/.test(username)) {
+    return {
+      ok: false,
+      error: "Username must be 3-30 characters using lowercase letters, numbers, or underscores.",
+    };
+  }
+
+  if (RESERVED_USERNAMES.has(username)) {
+    return {
+      ok: false,
+      error: "That username is reserved by the application.",
+    };
+  }
+
+  return { ok: true, value: username };
+};
+
+const validateOptionalImageUrl = (value, label) => {
+  const url = String(value || "").trim();
+
+  if (!url) {
+    return { ok: true, value: "" };
+  }
+
+  try {
+    const parsed = new URL(url);
+
+    if (!["http:", "https:"].includes(parsed.protocol)) {
+      throw new Error("Unsupported protocol");
+    }
+
+    return { ok: true, value: url };
+  } catch {
+    return {
+      ok: false,
+      error: `${label} must be a valid http or https URL.`,
+    };
+  }
+};
+
+const contributionMatch = (user) => ({
+  done: true,
+  $or: [
+    { creatorId: user._id },
+    { to_user: user.username },
+  ],
+});
+
+const serializeContribution = (payment) => ({
+  id: String(payment._id),
+  name: payment.name,
+  message: payment.message || "",
+  amount: payment.amount,
+  mode: payment.mode || "demo",
+  createdAt: payment.createdAt
+    ? new Date(payment.createdAt).toISOString()
+    : null,
+});
+
+const serializeProject = (project) => ({
+  id: String(project._id),
+  title: project.title,
+  description: project.description || "",
+  files: project.files.map((file) => ({
+    id: String(file.fileId),
+    filename: file.filename,
+    contentType: file.contentType,
+    size: file.size,
+    url: `/api/projects/files/${file.fileId}`,
+  })),
+  updatedAt: project.updatedAt
+    ? new Date(project.updatedAt).toISOString()
+    : null,
+});
+
+const getCreatorProjects = async (creatorId) => {
+  const projects = await Project.find({ creatorId })
+    .select("title description files updatedAt")
+    .sort({ updatedAt: -1 })
+    .limit(20)
+    .lean();
+
+  return projects.map(serializeProject);
+};
+
+const getContributionStats = async (user) => {
+  const [aggregateResult, topContributions] = await Promise.all([
+    Payment.aggregate([
+      { $match: contributionMatch(user) },
+      {
+        $group: {
+          _id: null,
+          totalAmount: { $sum: "$amount" },
+          contributionCount: { $sum: 1 },
+          averageAmount: { $avg: "$amount" },
+          uniqueSupporters: { $addToSet: "$name" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          totalAmount: 1,
+          contributionCount: 1,
+          averageAmount: 1,
+          supporterCount: { $size: "$uniqueSupporters" },
+        },
+      },
+    ]),
+    Payment.find(contributionMatch(user))
+      .select("name message amount mode createdAt")
+      .sort({ amount: -1, createdAt: -1 })
+      .limit(10)
+      .lean(),
+  ]);
+
+  const aggregate = aggregateResult[0] || {
+    totalAmount: 0,
+    contributionCount: 0,
+    averageAmount: 0,
+    supporterCount: 0,
+  };
+
+  return {
+    stats: {
+      totalAmount: aggregate.totalAmount || 0,
+      contributionCount: aggregate.contributionCount || 0,
+      supporterCount: aggregate.supporterCount || 0,
+      averageAmount: Math.round(aggregate.averageAmount || 0),
+    },
+    topContributions: topContributions.map(serializeContribution),
+  };
+};
+
+export const getPublicCreatorData = async (usernameInput) => {
+  const username = normalizeUsername(usernameInput);
+
+  if (!username) {
+    return null;
+  }
+
+  await connectDb();
+
+  const user = await User.findOne({ username })
+    .select("_id name username profilepic coverpic fundingGoal")
+    .lean();
+
+  if (!user) {
+    return null;
+  }
+
+  const [contributionData, projects] = await Promise.all([
+    getContributionStats(user),
+    getCreatorProjects(user._id),
+  ]);
+
+  return {
+    profile: {
+      name: user.name || user.username,
+      username: user.username,
+      profilepic: user.profilepic || "",
+      coverpic: user.coverpic || "",
+      fundingGoal: user.fundingGoal || 10000,
+    },
+    projects,
+    testCheckoutEnabled: Boolean(
+      process.env.RAZORPAY_KEY_ID?.startsWith("rzp_test_") &&
+      process.env.RAZORPAY_KEY_SECRET,
+    ),
+    ...contributionData,
+  };
+};
+
+export const getDashboardData = async () => {
+  try {
+    const user = await requireCurrentUser();
+    const [contributionData, recentContributions, projects] = await Promise.all([
+      getContributionStats(user),
+      Payment.find(contributionMatch(user))
+        .select("name message amount mode createdAt")
+        .sort({ createdAt: -1 })
+        .limit(6)
+        .lean(),
+      getCreatorProjects(user._id),
+    ]);
+
+    return {
+      ok: true,
+      profile: {
+        email: user.email,
+        name: user.name || "",
+        username: user.username,
+        profilepic: user.profilepic || "",
+        coverpic: user.coverpic || "",
+        fundingGoal: user.fundingGoal || 10000,
+      },
+      projects,
+      ...contributionData,
+      recentContributions: recentContributions.map(serializeContribution),
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      error: error.message || "Could not load the dashboard.",
+    };
+  }
+};
+
+const escapeRegex = (value) =>
+  value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const serializeCreatorSearchResult = (user) => ({
+  id: String(user._id),
+  name: user.name || user.username,
+  username: user.username,
+  profilepic: user.profilepic || "",
+});
+
+export const searchCreators = async (queryInput) => {
+  const query = String(queryInput || "").trim().slice(0, 40);
+
+  if (query.length < 2) {
+    return [];
+  }
+
+  await connectDb();
+
+  const escapedQuery = escapeRegex(query);
+  const prefixPattern = new RegExp(`^${escapedQuery}`, "i");
+  const containsPattern = new RegExp(escapedQuery, "i");
+  const projection = "name username profilepic";
+
+  const prefixMatches = await User.find({
+    $or: [
+      { username: prefixPattern },
+      { name: prefixPattern },
+    ],
+  })
+    .select(projection)
+    .sort({ username: 1 })
+    .limit(8)
+    .lean();
+
+  if (prefixMatches.length >= 8) {
+    return prefixMatches.map(serializeCreatorSearchResult);
+  }
+
+  const prefixIds = prefixMatches.map((user) => user._id);
+  const similarMatches = await User.find({
+    _id: { $nin: prefixIds },
+    $or: [
+      { username: containsPattern },
+      { name: containsPattern },
+    ],
+  })
+    .select(projection)
+    .sort({ username: 1 })
+    .limit(8 - prefixMatches.length)
+    .lean();
+
+  return [...prefixMatches, ...similarMatches].map(
+    serializeCreatorSearchResult,
+  );
+};
+
+export const updateProfile = async (formData) => {
+  try {
+    const user = await requireCurrentUser();
+    const usernameResult = validateUsername(formData.get("username"));
+    const profilepicResult = validateOptionalImageUrl(
+      formData.get("profilepic"),
+      "Profile picture",
+    );
+    const coverpicResult = validateOptionalImageUrl(
+      formData.get("coverpic"),
+      "Cover picture",
+    );
+    const name = String(formData.get("name") || "").trim();
+    const fundingGoal = Number(formData.get("fundingGoal"));
+
+    if (!usernameResult.ok) {
+      return usernameResult;
+    }
+
+    if (!profilepicResult.ok) {
+      return profilepicResult;
+    }
+
+    if (!coverpicResult.ok) {
+      return coverpicResult;
+    }
+
+    if (name.length > 80) {
+      return {
+        ok: false,
+        error: "Display name must contain at most 80 characters.",
+      };
+    }
+
+    if (
+      !Number.isInteger(fundingGoal) ||
+      fundingGoal < 100 ||
+      fundingGoal > 10000000
+    ) {
+      return {
+        ok: false,
+        error: "Funding goal must be a whole number between ₹100 and ₹1,00,00,000.",
+      };
+    }
+
+    const username = usernameResult.value;
+    const oldUsername = user.username;
+
+    if (username !== oldUsername) {
+      const existingUser = await User.exists({
+        username,
+        _id: { $ne: user._id },
+      });
+
+      if (existingUser) {
+        return {
+          ok: false,
+          error: "That username is already in use.",
+        };
+      }
+    }
+
+    await User.updateOne(
+      { _id: user._id },
+      {
+        $set: {
+          name,
+          username,
+          profilepic: profilepicResult.value,
+          coverpic: coverpicResult.value,
+          fundingGoal,
+        },
+      },
+      { runValidators: true },
+    );
+
+    if (username !== oldUsername) {
+      await Payment.updateMany(
+        {
+          $or: [
+            { creatorId: user._id },
+            { to_user: oldUsername },
+          ],
+        },
+        { $set: { to_user: username } },
+      );
+
+      revalidatePath(`/${oldUsername}`);
+    }
+
+    revalidatePath(`/${username}`);
+    revalidatePath("/dashboard");
+
+    return {
+      ok: true,
+      username,
+      message: "Profile updated successfully.",
+    };
+  } catch (error) {
+    if (error?.code === 11000) {
+      return {
+        ok: false,
+        error: "That email or username is already in use.",
+      };
+    }
+
+    return {
+      ok: false,
+      error: error.message || "Could not update the profile.",
+    };
+  }
+};
+
+=== FILE: ./lib/contribution-validation.js ===
+export const validateContributionInput = (input) => {
+  const username = String(input?.username || "").trim().toLowerCase();
+  const name = String(input?.name || "").trim();
+  const message = String(input?.message || "").trim();
+  const amount = Number(input?.amount);
+
+  if (!/^[a-z0-9_]{3,30}$/.test(username)) {
+    return { ok: false, error: "Invalid creator username." };
+  }
+
+  if (name.length < 2 || name.length > 60) {
+    return {
+      ok: false,
+      error: "Supporter name must contain between 2 and 60 characters.",
+    };
+  }
+
+  if (message.length > 240) {
+    return {
+      ok: false,
+      error: "Message must contain at most 240 characters.",
+    };
+  }
+
+  if (!Number.isInteger(amount) || amount < 10 || amount > 100000) {
+    return {
+      ok: false,
+      error: "Test amount must be a whole number between ₹10 and ₹1,00,000.",
+    };
+  }
+
+  return {
+    ok: true,
+    value: { username, name, message, amount },
+  };
+};
+
+=== FILE: ./lib/project-files.js ===
+export const MAX_PROJECT_FILES = 5;
+export const MAX_PROJECT_FILE_BYTES = 5 * 1024 * 1024;
+export const MAX_PROJECT_TOTAL_BYTES = 15 * 1024 * 1024;
+
+const ALLOWED_FILE_TYPES = new Set([
+  "application/json",
+  "application/msword",
+  "application/pdf",
+  "application/vnd.ms-excel",
+  "application/vnd.ms-powerpoint",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/zip",
+  "application/x-zip-compressed",
+  "image/gif",
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "text/css",
+  "text/csv",
+  "text/html",
+  "text/javascript",
+  "text/markdown",
+  "text/plain",
+]);
+
+const ALLOWED_EXTENSIONS = new Set([
+  "css",
+  "c",
+  "cpp",
+  "csv",
+  "doc",
+  "docx",
+  "gif",
+  "jpeg",
+  "jpg",
+  "js",
+  "jsx",
+  "json",
+  "java",
+  "md",
+  "pdf",
+  "png",
+  "ppt",
+  "pptx",
+  "py",
+  "sh",
+  "sql",
+  "ts",
+  "tsx",
+  "txt",
+  "webp",
+  "xls",
+  "xlsx",
+  "xml",
+  "yaml",
+  "yml",
+  "zip",
+]);
+
+export const sanitizeFilename = (filename) => {
+  const cleaned = String(filename || "file")
+    .replace(/[\\/\0-\x1f\x7f]/g, "_")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return (cleaned || "file").slice(0, 180);
+};
+
+export const validateProjectFiles = (files) => {
+  if (files.length < 1 || files.length > MAX_PROJECT_FILES) {
+    return `Choose between 1 and ${MAX_PROJECT_FILES} files.`;
+  }
+
+  let totalSize = 0;
+
+  for (const file of files) {
+    const extension = file.name.split(".").pop()?.toLowerCase() || "";
+
+    if (!ALLOWED_FILE_TYPES.has(file.type) && !ALLOWED_EXTENSIONS.has(extension)) {
+      return `${file.name} uses an unsupported file type.`;
+    }
+
+    if (file.size < 1 || file.size > MAX_PROJECT_FILE_BYTES) {
+      return `${file.name} must be larger than 0 bytes and no larger than 5 MB.`;
+    }
+
+    totalSize += file.size;
+  }
+
+  if (totalSize > MAX_PROJECT_TOTAL_BYTES) {
+    return "A project folder can contain at most 15 MB in total.";
+  }
+
+  return null;
+};
+
+=== FILE: ./lib/current-user.js ===
+import { getServerSession } from "next-auth";
+import connectDb from "@/db/connectDB";
+import User from "@/models/User";
+import { authOptions } from "@/lib/auth";
+
+export const requireCurrentUser = async () => {
+  const session = await getServerSession(authOptions);
+  const email = session?.user?.email?.trim().toLowerCase();
+
+  if (!email) {
+    throw new Error("You must be signed in to perform this action.");
+  }
+
+  await connectDb();
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new Error("The signed-in user no longer exists.");
+  }
+
+  return user;
+};
+
+=== FILE: ./lib/auth.js ===
+import GitHubProvider from "next-auth/providers/github";
+import connectDb from "@/db/connectDB";
+import User from "@/models/User";
+
+const RESERVED_USERNAMES = new Set([
+  "about",
+  "api",
+  "dashboard",
+  "login",
+  "logout",
+  "support",
+]);
+
+const usernameStemFromEmail = (email) => {
+  const emailPrefix = email.split("@")[0].toLowerCase();
+  const cleaned = emailPrefix.replace(/[^a-z0-9_]/g, "").slice(0, 24);
+  const stem = cleaned.length >= 3 ? cleaned : `creator_${cleaned || "user"}`;
+
+  return RESERVED_USERNAMES.has(stem) ? `${stem}_creator` : stem;
+};
+
+const createUserWithAvailableUsername = async ({ email, name }) => {
+  const stem = usernameStemFromEmail(email);
+
+  for (let attempt = 0; attempt < 100; attempt += 1) {
+    const suffix = attempt === 0 ? "" : `_${attempt + 1}`;
+    const username = `${stem.slice(0, 30 - suffix.length)}${suffix}`;
+
+    try {
+      return await User.create({
+        email,
+        name: name?.trim() || "",
+        username,
+      });
+    } catch (error) {
+      if (error?.code !== 11000) {
+        throw error;
+      }
+
+      if (error?.keyPattern?.email || error?.keyValue?.email) {
+        return User.findOne({ email });
+      }
+    }
+  }
+
+  throw new Error("Could not generate an available username.");
+};
+
+export const authOptions = {
+  providers: [
+    GitHubProvider({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
+      // GitHub includes this RFC 9207 issuer in OAuth callback responses.
+      issuer: "https://github.com/login/oauth",
+    }),
+  ],
+  callbacks: {
+    async signIn({ user, account }) {
+      if (account?.provider !== "github") {
+        return false;
+      }
+
+      const email = user?.email?.trim().toLowerCase();
+
+      if (!email) {
+        return false;
+      }
+
+      await connectDb();
+
+      const currentUser = await User.findOne({ email });
+
+      if (!currentUser) {
+        await createUserWithAvailableUsername({
+          email,
+          name: user.name,
+        });
+      }
+
+      return true;
+    },
+    async session({ session }) {
+      const email = session?.user?.email?.trim().toLowerCase();
+
+      if (!email) {
+        return session;
+      }
+
+      await connectDb();
+
+      const dbUser = await User.findOne({ email })
+        .select("_id username")
+        .lean();
+
+      if (dbUser) {
+        session.user.id = String(dbUser._id);
+        session.user.username = dbUser.username;
+      }
+
+      return session;
+    },
+  },
+};
+
+=== FILE: ./lib/razorpay-test.js ===
+const RAZORPAY_API_BASE = "https://api.razorpay.com/v1";
+
+export const getRazorpayTestCredentials = () => {
+  const keyId = process.env.RAZORPAY_KEY_ID;
+  const keySecret = process.env.RAZORPAY_KEY_SECRET;
+
+  if (!keyId || !keySecret) {
+    throw new Error("Razorpay Test Mode keys are not configured.");
+  }
+
+  if (!keyId.startsWith("rzp_test_")) {
+    throw new Error(
+      "Only Razorpay Test Mode keys are allowed in this portfolio project.",
+    );
+  }
+
+  return { keyId, keySecret };
+};
+
+const authorizationHeader = (keyId, keySecret) =>
+  `Basic ${Buffer.from(`${keyId}:${keySecret}`).toString("base64")}`;
+
+export const razorpayRequest = async (path, options = {}) => {
+  const { keyId, keySecret } = getRazorpayTestCredentials();
+  const response = await fetch(`${RAZORPAY_API_BASE}${path}`, {
+    ...options,
+    headers: {
+      Accept: "application/json",
+      Authorization: authorizationHeader(keyId, keySecret),
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+    cache: "no-store",
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    const description =
+      data?.error?.description ||
+      data?.error?.reason ||
+      `Razorpay returned HTTP ${response.status}.`;
+
+    throw new Error(description);
+  }
+
+  return data;
+};
+
+=== FILE: ./lib/gridfs.js ===
+import mongoose from "mongoose";
+import connectDb from "@/db/connectDB";
+
+export const PROJECT_FILE_BUCKET = "projectFiles";
+
+export const getProjectFileBucket = async () => {
+  await connectDb();
+
+  return new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+    bucketName: PROJECT_FILE_BUCKET,
+  });
+};
+
+=== FILE: ./db/connectDB.js ===
+
+import mongoose from "mongoose";
+
+const globalForMongoose = globalThis;
+
+if (!globalForMongoose.mongooseCache) {
+  globalForMongoose.mongooseCache = {
+    connection: null,
+    promise: null,
+  };
+}
+
+const connectDb = async () => {
+  if (!process.env.MONGO_URI) {
+    throw new Error("MONGO_URI is not configured.");
+  }
+
+  if (globalForMongoose.mongooseCache.connection) {
+    return globalForMongoose.mongooseCache.connection;
+  }
+
+  if (!globalForMongoose.mongooseCache.promise) {
+    globalForMongoose.mongooseCache.promise = mongoose
+      .connect(process.env.MONGO_URI)
+      .then((mongooseInstance) => mongooseInstance);
+  }
+
+  try {
+    globalForMongoose.mongooseCache.connection =
+      await globalForMongoose.mongooseCache.promise;
+
+    return globalForMongoose.mongooseCache.connection;
+  } catch (error) {
+    globalForMongoose.mongooseCache.promise = null;
+    throw error;
+  }
+};
+
+export default connectDb;
+
